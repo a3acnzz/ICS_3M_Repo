@@ -1,0 +1,11 @@
+<project name="ics-api" default="convert-war-to-ear" basedir=".">
+  <description>
+    Convert Grails .WAR file to .EAR file for 3M JBoss Environment
+  </description>
+  <target name="convert-war-to-ear">
+    <ear destfile="build\libs\ics-api.v0.ear" appxml="src\main\scripts\META-INF\application.xml">
+      <fileset dir="build\libs\" includes="ics-api.war"/>
+      <metainf dir="src\main\scripts\META-INF\" includes="jboss-deployment-structure.xml" />
+    </ear>
+  </target>
+</project>

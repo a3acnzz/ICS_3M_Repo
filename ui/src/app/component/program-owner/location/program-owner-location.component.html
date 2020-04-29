@@ -1,0 +1,74 @@
+<div class="d-flex flex-row">
+  <h4 class="d-flex mr-auto"><a routerLink="../..">Program Owner</a> &nbsp;/ {{locationName}} / Programs</h4>
+   <div class="dropdown d-flex ml-auto">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="actionsButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <i class="fa fa-cogs fa-fw"></i>
+      Actions
+    </button>
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+      <button class="dropdown-item" type="button" [disabled]="!!!locationId" (click)="configureAnnouncement()">
+        <i class="fa fa-bullhorn fa-fw"></i>
+        Configure Location Announcement
+      </button>
+      <button class="dropdown-item" type="button" [disabled]="!!!locationId" (click)="configureEmailTemplates()">
+        <i class="fa fa-envelope fa-fw"></i>
+        Configure Email Templates
+      </button>
+      <button class="dropdown-item" type="button" [disabled]="!!!locationId" (click)="configureBccEmails()">
+        <i class="fa fa-at fa-fw"></i>
+        Configure BCC Emails
+      </button>
+      <button class="dropdown-item" type="button" [disabled]="!!!locationId" (click)="configureContactUs()">
+        <i class="fa fa-phone fa-fw"></i>
+        Configure Contact Us
+      </button>
+      <div class="dropdown-divider"></div>
+      <button class="dropdown-item" id="newProgramButton" routerLink="./program/0">
+        <i class="fa fa-plus-square fa-fw"></i>
+        Create New Program
+      </button>
+    </div>
+  </div>
+</div>
+<hr/>
+<div [ngBusy]="busyLoading"></div>
+<div class="row">
+  <div class="col">
+    <div class="row table-header">
+      <div class="input-group input-group-sm col">
+        <div class="input-group-prepend">
+          <i class="input-group-text fa fa-filter"></i>
+        </div>
+        <input (input)="dt.filterGlobal($event.target.value, 'contains')" class="form-control form-control-sm d-flex" id="programFilterString" placeholder="Filter">
+      </div>
+    </div>
+    <p-table #dt
+             [value]="programList"
+             [globalFilterFields]="['name', 'active']"
+             [paginator]="programList?.length > rowsPerPage"
+             [rows]="rowsPerPage"
+             [rowsPerPageOptions]="rowsPerPageOptions"
+             styleClass="MMM-prime-table">
+      <ng-template pTemplate="header">
+        <tr>
+          <th [pSortableColumn]="'name'">Program
+            <p-sortIcon [field]="'name'"></p-sortIcon>
+          </th>
+          <th [pSortableColumn]="'active'">Active Status
+            <p-sortIcon [field]="'active'"></p-sortIcon>
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-program>
+        <tr>
+          <td>
+            <a class="tableLink" routerLink="./program/{{program.id}}">{{program.name}}</a>
+          </td>
+          <td>
+            {{program.active ? 'Active' : 'Inactive'}}
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

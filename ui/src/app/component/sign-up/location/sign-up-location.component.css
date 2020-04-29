@@ -1,0 +1,9 @@
+.table-header {
+  margin-bottom: .5rem;
+  margin-top: .5rem;
+}
+
+.appointment-title {
+  margin-bottom: 0;
+  padding-left: 0 !important;
+}

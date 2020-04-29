@@ -1,0 +1,8 @@
+<project name="ics-ui" default="zip-build" basedir=".">
+  <description>
+    Zip the 'dist' directory for publishing as an artifact in Bamboo
+  </description>
+  <target name="zip-build">
+    <zip destfile="${zipFileName}" basedir="dist" />
+  </target>
+</project>
