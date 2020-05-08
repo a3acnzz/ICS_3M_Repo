@@ -1,0 +1,114 @@
+<header role="banner" class="hidden-print">
+    <mat-toolbar class="toolbar">
+
+        <div class="title-center">
+            <a class="logo-spacing">
+                <img [src]="headerLogoFilename" height="25" />
+            </a>
+            <a class="link menu-item">ERFE Application</a>
+        </div>
+        <ul class="nav navbar-nav">
+
+            <li class="nav-item">
+                <a class="nav-link" id="appDropdownMenuLink" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-user"></i> Welcome {{prsnName}}
+                </a>
+            </li>
+        </ul>
+        <ul class="nav navbar-nav pr-1" *ngIf="!hideLogoInd">
+            <li class="nav-item">
+                <i class="fa fa-lg fa-sign-out nav-link" (click)="logout()" style="cursor: hand;cursor: pointer;"></i>
+            </li>
+        </ul>
+
+
+    </mat-toolbar>
+</header>
+
+
+<div class="ui-g pb-5 pt-5">
+    <div class="ui-lg-2 ui-md-1 ui-sm-1 ui-xs-1"></div>
+    <div class="ui-lg-8 ui-md-10 ui-sm-10 ui-xs-10 ui-g-nopad rounded" style="cursor: pointer; border: 2px solid #3366ff;">
+        <div class="ui-g">
+            <div class="ui-g-12 ui-g-nopad pb-3">
+                <div style="background-color:white;background-image:url(../../../assets/img/Mesh_Header_Blue-LightBlue.png);background-size: contain; font-weight: bold;">
+                    <div class="headerlabel">3M ERFE</div>
+                </div>
+            </div>
+            <div class="ui-lg-1 ui-md-1 ui-sm-1 ui-xs-1 pb-3"></div>
+            <div class="ui-lg-10 ui-md-10 ui-sm-10 ui-xs-10 pb-3">
+                <!-- Row 1 -->
+                <div class="ui-g">
+                    <div class="ui-lg-6 ui-md-12 ui-sm-12 ui-xs-12">
+                        <div class="card custom-grid" [routerLink]="['/home']">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-5 col-md-3 col-sm-4 col-xs-4 align-self-center text-center">
+                                        <img class="card-img" src="../../../assets/img/ps_dashboard.png" alt="CorpPSERFE">
+                                    </div>
+                                    <div class="col-lg-7 col-md-9 col-sm-8 col-xs-8">
+                                        <h4 class="card-title text-left mt-2">{{corpps}}</h4>
+                                        <span class="left-align">{{CorpPSERFEDashboardDescription}}&#160;<strong>SAP</strong></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui-lg-6 ui-md-12 ui-sm-12 ui-xs-12">
+                        <div class="card custom-grid" (click)="notImplemented(ps)">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-5 col-md-3 col-sm-4 col-xs-4 align-self-center text-center">
+                                        <img class="card-img" src="../../../assets/img/ps_dashboard.png" alt="PsERFE">
+                                    </div>
+                                    <div class="col-lg-7 col-md-9 col-sm-8 col-xs-8">
+                                        <h4 class="card-title text-left mt-2">{{ps}}</h4>
+                                        <span class="left-align">{{PSERFEDashboardDescriptionStart}}&#160;<strong style="text-decoration: underline;">Not</strong>&#160;{{PSERFEDashboardDescriptionMiddle}}&#160;<strong>PeopleSoft</strong>&#160;{{PSERFEDashboardDescriptionLast}}</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 2 -->
+                <div class="ui-g">
+                    <div class="ui-lg-6 ui-md-12 ui-sm-12 ui-xs-12">
+                        <div class="card custom-grid" (click)="notImplemented(corphs)">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-5 col-md-3 col-sm-4 col-xs-4 align-self-center text-center">
+                                        <img class="card-img" src="../../../assets/img/hs_it_dashboard.png" alt="CorpHsItERFE">
+                                    </div>
+                                    <div class="col-lg-7 col-md-9 col-sm-8 col-xs-8">
+                                        <h4 class="card-title text-left mt-2">{{corphs}}</h4>
+                                        <span class="left-align">{{CorpHSITERFEDashboardDescription}}&#160;<strong>SAP</strong></span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui-lg-6 ui-md-12 ui-sm-12 ui-xs-12">
+                        <div class="card custom-grid" (click)="notImplemented(hs)">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-5 col-md-3 col-sm-4 col-xs-4 align-self-center text-center">
+                                        <img class="card-img" src="../../../assets/img/hs_it_dashboard.png" alt="HsItERFE">
+                                    </div>
+                                    <div class="col-lg-7 col-md-9 col-sm-8 col-xs-8">
+                                        <h4 class="card-title text-left mt-2">{{hs}}</h4>
+                                        <span class="left-align">{{HSITERFEDashboardDescription}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-lg-1 ui-md-1 ui-sm-1 ui-xs-1 pb-3"></div>
+        </div>
+    </div>
+    <div class="ui-lg-2 ui-md-1 ui-sm-1 ui-xs-1"></div>
+</div>
