@@ -1,0 +1,69 @@
+<div class="row d-flex justify-content-center">
+    <div class="col-md-11" style="margin-top: 30px;">
+        <div [ngBusy]="[busyLoading]">
+            <p-card class="ui-card" [style]="{'border':'2px solid #3366ff'}">
+                <p-header>
+                    <div class="text-center" style="background-color:white;background-image:url(../../../assets/img/Mesh_Header_Blue-LightBlue.png);background-size:
+                            contain; font-weight: bold; line-height: 65px;">
+                        <div class="ui-g">
+                            <div class="ui-g-10 headerlabel">Welcome to 3M Corp PS ERFE!</div>
+                        </div>
+                    </div>
+                </p-header>
+                <div class="row p-2 mt-2">
+                    <div class="col-lg-9 col-md-8 col-sm-12 col-xs-12">
+                        <h3><span>Hi {{approverName}}!</span><span>&#160;Click on&#160;<i class="fa fa-pencil"></i><b style="font-style: italic;">New RFE Document</b> for creating eRFE.</span>
+                            <span>&#160;Click on &#160;<i class="fa fa-dashboard"></i><b style="font-style: italic;">Dashboard</b> to switch between eRFE's.</span></h3>
+                        <h3><span *ngIf="!isAdmin">{{requestString}}</span></h3>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12">
+                        <h4>Today's Date:&#160;{{todayDate | date :"M/d/yyyy"}}</h4>
+                    </div>
+                </div>
+
+                <div class="container p-2">
+                    <div class="row card-group">
+
+                        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 p-2"
+                            *ngFor="let requestor of requestorResults; let i = index">
+                            <p-card subheader="Requestor Details" [style]="{width: '360px'}"
+                                styleClass="ui-card-shadow border border-primary shadow">
+
+                                <p-header *ngIf="countCheck(requestor.projectTitle)">
+                                    <h4 style="margin-top: 20px;padding-bottom: 0%; padding-left: 10px;font-weight: bold;"
+                                        [tooltip]="myTooltip" placement="top">{{substring(requestor.projectTitle) | uppercase}}</h4>
+                                    <ng-template #myTooltip >
+                                        <h6 style="font-style: italic;">{{requestor.projectTitle | uppercase}}</h6>
+                                    </ng-template>
+                                </p-header>
+                                <p-header *ngIf="!countCheck(requestor.projectTitle)">
+                                    <h4
+                                        style="margin-top: 20px;padding-bottom: 0%; padding-left: 10px;font-weight: bold;">
+                                        {{substring(requestor.projectTitle) | uppercase}}</h4>
+                                </p-header>
+
+                                <div>
+                                    <h6><strong>Request Number:&#160;</strong><i
+                                            class="text-info">{{ requestor?.corpPsNumber }}</i></h6>
+                                    <h6><strong>Requestor Name:&#160;</strong>{{ requestor?.requestorName }}</h6>
+                                    <h6><strong>Created
+                                            Date:&#160;</strong>{{ requestor?.createdDate | date :"M/d/yyyy"}}
+                                    </h6>
+
+                                </div>
+                                <p-footer>
+                                    <a [routerLink]="['/new-rfe-document/corpReqNum/view',requestor?.corpPsNumber]">
+                                        <button pButton type="button" label="Review and Approve" icon="pi pi-check"
+                                            style="margin-right: .25em"></button>
+                                    </a>
+                                </p-footer>
+                            </p-card>
+                        </div>
+
+                    </div>
+                </div>
+
+            </p-card>
+
+        </div>
+    </div>

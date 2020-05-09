@@ -1,0 +1,180 @@
+<div [ngBusy]="[busyLoading]">
+</div>
+
+<form [formGroup]="selectForm" *ngIf="commonFormDisplay" (ngSubmit)="searchForm()">
+    <div class="ui-g">
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-g-12 ui-label">
+                <h6>Last Name</h6>
+                <input type="text" class="form-control" id="lastName" name="lastName" pInputText formControlName="lastName">
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-g-12 ui-label">
+                <h6>First Name</h6>
+                <input type="text" class="form-control" id="firstName" name="firstName" pInputText formControlName="firstName">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g">
+        <div class="ui-g-6 ui-md-3">
+            <div class="ui-g-12 ui-label">
+                <h6>Person ID</h6>
+                <input type="text" class="form-control" id="pin" name="pin" pInputText formControlName="pin">
+            </div>
+        </div>
+        <div class="ui-g-6 ui-md-3">
+            <div class="ui-g-12 ui-label">
+                <h6>User Pin</h6>
+                <input type="text" class="form-control" id="userPin" name="userPin" pInputText formControlName="userPin">
+            </div>
+        </div>
+        <div class="ui-g-6 ui-md-4">
+
+            <div class="ui-g-12" style="text-align: right;">
+                <br>
+                <p-button type="submit" label="Search"></p-button>
+
+            </div>
+        </div>
+        <div class="ui-g-6 ui-md-2">
+
+            <div class="ui-g-12">
+                <br>
+                <p-button type="button" label="Reset" (click)="resetForm()"></p-button>
+            </div>
+        </div>
+
+    </div>
+
+</form>
+
+
+<form [formGroup]="orderForm" *ngIf="orderFormDisplay" (ngSubmit)="orderSearch()">
+    <div class="ui-g">
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-g-12 ui-label">
+                <h6>Supplier Name</h6>
+                <input type="text" class="form-control" pInputText formControlName="name">
+            </div>
+        </div>
+
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-g-12 ui-label">
+                <h6>Supplier Base</h6>
+                <input type="text" class="form-control" pInputText formControlName="base">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-g-6" style="text-align: right;">
+                <br>
+                <p-button type="submit" label="Search"></p-button>
+            </div>
+            <div class="ui-g-1" style="text-align: center;">
+                <br>
+                <p-button type="button" label="Reset" (click)="resetForm()"></p-button>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+</form>
+
+
+<form [formGroup]="accForm" *ngIf="accFormDisplay" (ngSubmit)="searchAccount()">
+    <div class="ui-g">
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-g-12 ui-label">
+                <h6>Account </h6>
+                <input type="text" class="form-control" id="acc" name="acc" pInputText formControlName="acc">
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-g-12 ui-label">
+                <h6>Account Description</h6>
+                <input type="text" class="form-control" id="desc" name="desc" pInputText formControlName="desc">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g">
+        <div class="ui-g-6 ui-md-6">
+            <div class="ui-g-12" style="text-align: right;">
+                <br>
+                <p-button type="submit" label="Search"></p-button>
+            </div>
+        </div>
+        <div class="ui-g-6 ui-md-6">
+            <div class="ui-g-12">
+                <br>
+                <p-button type="button" label="Reset" (click)="resetForm()"></p-button>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<form [formGroup]="deptForm" *ngIf="deptFormDisplay" (ngSubmit)="searchCost()">
+    <div class="ui-g">
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-g-12 ui-label">
+                <h6>Cost Center</h6>
+                <input type="text" class="form-control" id="cost" name="cost" pInputText formControlName="cost">
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-g-12 ui-label">
+                <h6>Cost Center Description</h6>
+                <input type="text" class="form-control" id="costDesc" name="costDesc" pInputText formControlName="costDesc">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g">
+        <div class="ui-g-6 ui-md-6">
+            <div class="ui-g-12" style="text-align: right;">
+                <br>
+                <p-button type="submit" label="Search"></p-button>
+            </div>
+        </div>
+        <div class="ui-g-6 ui-md-6">
+            <div class="ui-g-12">
+                <br>
+                <p-button type="button" label="Reset" (click)="resetForm()"></p-button>
+            </div>
+        </div>
+    </div>
+</form>
+&nbsp;
+<p-table [columns]="headers" [value]="filterValue" [responsive]='true' [(first)]="first" [paginator]="true" [rows]="10" selectionMode="single" [(selection)]="selected" [resizableColumns]="true" class="text-center">
+    <!-- <ng-template pTemplate="caption">
+        <p style="text-align: right;">Records({{filterValue?.length}})</p>
+    </ng-template> -->
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                {{col.header}}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+            </th>
+        </tr>
+    </ng-template>  
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr [pSelectableRow]="rowData" (dblclick)="onDblClick(rowData)">
+            <td *ngFor="let col of columns">
+                {{rowData[col.field]}}
+            </td>
+        </tr>
+    </ng-template>
+
+</p-table>
+<div class="ui-g">
+    <div class="ui-g-6" style="text-align: right;">
+        <p-button type="button" (click)="onSubmit()" label="OK"></p-button>
+    </div>
+    <div class="ui-g-6">
+        <p-button type="button" (click)="close()" label="Cancel"></p-button>
+    </div>
+</div>

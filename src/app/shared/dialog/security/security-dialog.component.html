@@ -1,0 +1,9 @@
+<div matDialogTitle appDraggableDialog>Access Denied
+  <a class="close ml-auto" (click)="dialogRef.close();"><span aria-hidden="true">&times;</span></a></div>
+<div mat-dialog-content>
+  You are not authorized to view this page
+</div>
+<br>
+<div mat-dialog-actions>
+  <button mat-raised-button color="primary" (click)="dialogRef.close(true)">OK</button>
+</div>
