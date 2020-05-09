@@ -1,0 +1,41 @@
+<div class="row d-flex">
+    <div [ngBusy]="[busyLoading]"></div>
+    <div class="ui-g pt-3 pb-3">
+        <div class="ui-g-1"></div>
+        <div class="ui-g-10">
+            <h2>Renewal List</h2>
+            <p-table [columns]="renewalheaders" [value]="renewal" [paginator]="true" [rows]="10" class="table text-center" sortMode="multiple" [resizableColumns]="true" #renewalTable>
+                <ng-template pTemplate="caption">
+                    <div class="ui-g">
+                        <div class="ui-lg-6 ui-sm-12">
+                            <div style="text-align: left">
+                                <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+                                <input class="text-center" type="text" pInputText size="50" placeholder="Global Filter" (input)="renewalTable.filterGlobal($event.target.value, 'contains')" style="width:auto">
+                            </div>
+                        </div>
+                        <div class="ui-lg-6 ui-sm-12 text-right">
+                            <p class="mt-1 mb-0">Records({{renewal?.length}})</p>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                            {{col.header}}
+                            <p-sortIcon [field]="col.field"></p-sortIcon>
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData let-columns="columns">
+                    <tr>
+                        <td *ngFor="let col of columns">
+                            <a routerLink="/renewal/{{rowData[col.field]}}" routerLinkActive="active" *ngIf="isLink(col.field)">{{rowData[col.field]}}</a>
+                            <p *ngIf="!isLink(col.field)">{{rowData[col.field]}}</p>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+        <div class="ui-g-1"></div>
+    </div>
+</div>

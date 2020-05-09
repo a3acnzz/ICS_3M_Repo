@@ -1,0 +1,48 @@
+<div class="row" style="margin-top: 10%;">
+    <div class="col-8" style="margin-left: auto;margin-right: auto;">
+        <p-card class="ui-card" [style]="{'border':'2px solid #3366ff'}">
+            <p-header>
+                <div class="text-center" style="background-color:white;background-image:url(../../../assets/img/Mesh_Header_Blue-LightBlue.png);background-size:
+                    contain; font-weight: bold; line-height: 65px;">
+                    <div class="ui-g">
+                        <div class="ui-g-10 headerlabel">Enter Your Login details</div>
+                    </div>
+                </div>
+            </p-header>
+            <form #loginForm="ngForm" (ngSubmit)="loginForm.form.valid && login(loginForm.value)" novalidate>
+                
+                <div class="form-group">
+                    <label for="userName">User Name</label>
+                    <input type="text" class="form-control" name="userName" [(ngModel)]="userName" #userNameField="ngModel" [ngClass]="{ 'is-invalid': loginForm.submitted && userNameField.invalid }" required  />
+                    <div *ngIf="loginForm.submitted && userNameField.invalid" class="invalid-feedback">
+                        <div *ngIf="userNameField.errors.required">User Name is required</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="userId">User Id</label>
+                    <input type="text" class="form-control" name="userId" [(ngModel)]="userId" #userIdField="ngModel" [ngClass]="{ 'is-invalid': loginForm.submitted && userIdField.invalid }" required  />
+                    <div *ngIf="loginForm.submitted && userIdField.invalid" class="invalid-feedback">
+                        <div *ngIf="userIdField.errors.required">User Id is required</div>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="userRole">User Role</label> &nbsp;
+                     <p-dropdown [options]="userList" name="userRole" [(ngModel)]="userRole" placeholder="Select a Role" optionLabel="name"
+                    [showClear]="true" #userRoleField="ngModel" [ngClass]="{ 'is-invalid': loginForm.submitted && userRoleField.invalid }" required></p-dropdown>
+                    <div *ngIf="loginForm.submitted && userRoleField.invalid" class="invalid-feedback">
+                        <div *ngIf="userRoleField.errors.required">User Role is required</div>
+                    </div>
+                    <br>
+                    <br>
+
+                </div>
+                    <button type="submit">LOGIN</button>
+            </form>
+            <p-footer>
+                    
+            </p-footer>
+        </p-card>
+    </div>
+</div>
