@@ -293,7 +293,6 @@ export class SignUpLocationComponent implements OnInit {
         if (results.programDate.totalAvailableAppointments) {
           this.appointments[appointmentIndex].availableAppointments = results.programDate.totalAvailableAppointments;
         }
-        console.log(this.appointments[appointmentIndex].availableAppointments)
         if (results.pendingAppointmentInsertedId) {
           this.appointments[appointmentIndex].pendingAppointmentInsertedId = results.pendingAppointmentInsertedId;
         }
@@ -517,7 +516,7 @@ export class SignUpLocationComponent implements OnInit {
       this.clearInvalidUserPins(this.appointments);
       let hasDuplicateAppointments = this.checkMinAndMaxPerUserSatisfy(this.appointments);
       if (!hasDuplicateAppointments) {
-        // this.validateAppointments(this.appointments);
+        this.validateAppointments(this.appointments);
       }
     } else {
       this.addAlert('Please correct the validation errors below.', 'danger', true);
