@@ -1,0 +1,153 @@
+<form #locationForm="ngForm" (ngSubmit)="save(locationForm)">
+  <div class="d-flex flex-row page-title">
+    <h4 class="d-flex"><a routerLink="../..">Administrator</a> &nbsp;/ Location</h4>
+    <div class="dropdown d-flex ml-auto">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="actionsButton" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+        <i class="fa fa-cogs fa-fw"></i>
+        Actions
+      </button>
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+        <button class="dropdown-item" type="button" id="addProgramOwnerButton" (click)="addProgramOwner()">
+          <i class="fa fa-user-plus fa-fw"></i>
+          Add Program Owner
+        </button>
+        <div class="dropdown-divider"></div>
+        <button class="dropdown-item" type="button" routerLink="../0">
+          <i class="fa fa-plus-square fa-fw"></i>
+          Create New Location
+        </button>
+      </div>
+    </div>
+    <button id="saveButton" type="submit" class="btn btn-primary d-flex">
+      <i class="fa fa-save fa-fw"></i>
+      Save
+    </button>
+  </div>
+  <div [ngBusy]="{busy:busySave, message:'Saving...'}"></div>
+  <div [ngBusy]="busyLoading"></div>
+  <hr/>
+  <alert id="alertMessage" *ngFor="let alert of alerts;let i = index" [type]="alert.type" dismissible="true">
+    {{ alert?.msg }}
+  </alert>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="name" class="col-form-label">Name</label><label class="requiredSymbol">*</label>
+        <input class="form-control" id="name" name="name" [(ngModel)]="location.name" #name="ngModel" required>
+        <alert type='danger' *ngIf="name.errors?.required && saveIndicator" id="nameRequiredError">
+          Name is required
+        </alert>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="code" class="col-form-label">Code</label><label class="requiredSymbol">*</label>
+        <div class="input-group">
+          <input class="form-control" id="code" name="code" [(ngModel)]="location.code" #code="ngModel"
+                 pattern="[A-Za-z0-9_-]*" required> <!-- if we ever want to force uppercase codes, add: oninput="this.value = this.value.toUpperCase()"-->
+        </div>
+        <sub *ngIf="location.code?.length > 0 && !locationId">
+          {{urlString + location.code}}
+        </sub>
+        <sub *ngIf="location.code?.length > 0 && locationId">
+          <a [routerLink]="['../../../sign-up/location/' + location.code]" id="locationLink">{{urlString + location.code}}</a>
+        </sub>
+        <alert type='danger' *ngIf="code.errors?.required && saveIndicator" id="codeRequiredError">
+          Code is required
+        </alert>
+        <alert type='danger' *ngIf="code.errors?.pattern && saveIndicator" id="patternError">
+          Code can contain alphanumeric characters (A-Z, a-z, 0-9) dashes (-) or underscores (_) only.
+        </alert>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="timeZone" class="col-form-label">Time Zone</label><label class="requiredSymbol">*</label>
+        <select class="form-control" id="timeZone" name="timeZone" [(ngModel)]="location.timeZone" #timeZone="ngModel">
+          <option [value]="zone" *ngFor="let zone of timeZoneList">
+            {{zone}}
+          </option>
+        </select>
+        <alert type='danger' *ngIf="location.timeZone.length <= 0 && saveIndicator" id="timeZoneRequiredError">
+          Time Zone is required
+        </alert>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-group">
+        <label class="col-form-label">Active</label> <br/>
+        <label class="switch" id="active">
+          <input type="checkbox" name="active" [(ngModel)]="location.active" #active="ngModel">
+          <span class="slider round"></span>
+        </label>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-group">
+        <label class="col-form-label">Show in Sign Up list?</label> <br/>
+        <label class="switch" id="showInSignUp">
+          <input type="checkbox" name="showInSignUpList" [(ngModel)]="location.showInSignUpList"
+                 #showInSignUpList="ngModel">
+          <span class="slider round"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <hr/>
+
+  <div class="row">
+    <div class="col">
+      <div class="d-flex flex-row page-title">
+        <h4 class="d-flex">Program Owners</h4>
+        <div class="d-flex ml-auto">
+          <div class="input-group input-group-sm">
+            <div class="input-group-prepend">
+              <i class="input-group-text fa fa-filter"></i>
+            </div>
+            <input (input)="dt.filterGlobal($event.target.value, 'contains')"
+                   class="form-control form-control-sm d-flex" id="programOwnerFilterString" placeholder="Filter">
+          </div>
+        </div>
+      </div>
+      <p-table #dt
+               [value]="location.programOwnerList"
+               [globalFilterFields]="['userPin', 'firstName', 'lastName']"
+               [paginator]="location.programOwnerList?.length > rowsPerPage"
+               [rows]="rowsPerPage"
+               [rowsPerPageOptions]="rowsPerPageOptions"
+               styleClass="MMM-prime-table">
+        <ng-template pTemplate="header">
+          <tr>
+            <th [pSortableColumn]="'userPin'">User Pin
+              <p-sortIcon [field]="'userPin'"></p-sortIcon>
+            </th>
+            <th [pSortableColumn]="'firstName'">First Name
+              <p-sortIcon [field]="'firstName'"></p-sortIcon>
+            </th>
+            <th [pSortableColumn]="'lastName'">Last Name
+              <p-sortIcon [field]="'lastName'"></p-sortIcon>
+            </th>
+            <th>Remove</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-programOwner>
+          <tr>
+            <td>{{programOwner.userPin}}</td>
+            <td>{{programOwner.firstName}}</td>
+            <td>{{programOwner.lastName}}</td>
+            <td>
+              <div class="text-center">
+                <button class="btn btn-danger" (click)="removeProgramOwner(programOwner)">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</form>

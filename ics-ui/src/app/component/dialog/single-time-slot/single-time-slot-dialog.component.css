@@ -1,0 +1,9 @@
+/* Add color to AM/PM timepicker buttons */
+:host /deep/ .btn-default {
+  background-color: #ced4da;
+}
+
+/* Align the time inputs nicely */
+.flex-column > .p-2 {
+  flex: 1;
+}

@@ -1,0 +1,5 @@
+<app-header></app-header>
+<div class="container-fluid">
+  <div *ngIf="(authGuard.loader)" [ngBusy]="{busy:busyLogin, message:loginMessage}"></div>
+  <router-outlet></router-outlet>
+</div>
