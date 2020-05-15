@@ -1,0 +1,192 @@
+{
+  "url": "",
+  "pageWaitTime": 2500,
+  "elementMaxWaitTime": 3000,
+  "user": {
+    "username": "TEST_USER"
+  },
+  "location": {
+    "name": "E2E Test Location",
+    "code": "E2E",
+    "timeZone": "America/Chicago",
+    "nameRequiredError": "Name is required",
+    "codeRequiredError": "Code is required",
+    "timeZoneRequiredError": "Time Zone is required",
+    "saveMessage": "Changes saved",
+    "programOwnerFirstName": "Program Owner",
+    "programOwnerLastName": "Test",
+    "programOwnerUserPin": "TEST_PROG_OWNER"
+  },
+  "manageAdmin": {
+    "saveMessage": "Changes saved.",
+    "adminUserFirstName": "E2E",
+    "adminUserLastName": "Admin",
+    "adminUserUserPin": "E2E_ADMIN"
+  },
+  "systemAnnouncement": {
+    "dialogTitle": "Announcement - System",
+    "message": "E2E Testing - System Announcement",
+    "saveMessage": "Changes saved."
+  },
+  "locationAnnouncement": {
+    "dialogTitle": "Announcement - E2E - Location - Announcement",
+    "message": "E2E Testing - Location Announcement",
+    "saveMessage": "Changes saved."
+  },
+  "programOwnerProgram": {
+    "saveMessage": "You have successfully saved your changes.",
+    "validationError": "Please correct the validation errors below.",
+    "nameRequiredError": "Name is required",
+    "venueRequiredError": "Venue is required",
+    "name": "E2E Test Program",
+    "venue": "E2E VTest Venue",
+    "startTimeErrorMessage": "Spacetime continuum violation: start time is greater than end time",
+    "endTimeErrorMessage": "Spacetime continuum violation: end time is less than than start time",
+    "slotHoursRequiredErrorMessage": "Time Slot Hours is required",
+    "slotMinutesRequiredErrorMessage": "Time Slot Minutes is required",
+    "maxAppointmentsRequiredErrorMessage": "Max Appointments is required",
+    "startTimeRequiredErrorMessage": "Start Time must be a valid time",
+    "endTimeRequiredErrorMessage": "End Time must be a valid time",
+    "slotHoursInvalidErrorMessage": "Must be between 0 - 23",
+    "slotMinutesInvalidErrorMessage": "Must be between 0 - 59",
+    "timeSlots": [
+      {
+        "startTime": "08:00 AM",
+        "endTime": "09:30 AM"
+      },
+      {
+        "startTime": "09:30 AM",
+        "endTime": "11:00 AM"
+      },
+      {
+        "startTime": "11:00 AM",
+        "endTime": "12:30 PM"
+      },
+      {
+        "startTime": "12:30 PM",
+        "endTime": "02:00 PM"
+      },
+      {
+        "startTime": "02:00 PM",
+        "endTime": "03:30 PM"
+      },
+      {
+        "startTime": "03:30 PM",
+        "endTime": "05:00 PM"
+      }
+    ],
+    "maxAppointments": 10,
+    "maxAppointmentsIncrease": 15,
+    "maxAppointmentsDecrease": 20
+  },
+  "bccEmails": {
+    "systemDialogTitle": "BCC Emails - System",
+    "locationDialogTitle": "BCC Emails - E2E - Location - BCC Emails",
+    "occMedEmail": "occupational-medicine-scheduler@mmm.com",
+    "misTestEmail": "mistest@mmm.com",
+    "invalidEmail": "3M.com",
+    "saveMessage": "Changes saved.",
+    "validationMessage": "Please correct the validation errors below.",
+    "emailFormatErrorMessage": "Input must be a valid email address",
+    "emailRequiredErrorMessage": "Email is required",
+    "duplicatesErrorMessage": "Duplicate emails"
+  },
+  "emailTemplates": {
+    "systemDialogTitle": "Email Templates - System",
+    "validationErrorMessage": "Please correct the validation errors.",
+    "systemSubjectRequiredErrorMessage": "Subject is required at the system level",
+    "systemMessageRequiredErrorMessage": "Message is required at the system level",
+    "locationDialogTitle": "Email Templates - E2E - Location - Email Templates",
+    "messageLengthErrorMessage": "Message cannot be longer than 2000 characters",
+    "saveMessage": "Changes saved.",
+    "systemConfirmationSubject": "System Confirmation Subject",
+    "systemConfirmationMessage": "System Confirmation Message",
+    "systemCancellationSubject": "System Cancellation Subject",
+    "systemCancellationMessage": "System Cancellation Message",
+    "locationConfirmationSubject": "Location Confirmation Subject",
+    "locationConfirmationMessage": "Location Confirmation Message",
+    "locationCancellationSubject": "Location Cancellation Subject",
+    "locationCancellationMessage": "Location Cancellation Message",
+    "programConfirmationSubject": "Program Confirmation Subject",
+    "programConfirmationMessage": "Program Confirmation Message",
+    "programCancellationSubject": "Program Cancellation Subject",
+    "programCancellationMessage": "Program Cancellation Message"
+  },
+  "contactUs": {
+    "locationName": "E2E - Location - Contact Us",
+    "contactMessage": "E2E Contact Us Message!",
+    "saveMessage": "Changes saved.",
+    "notConfiguredMessage": "There is no contact us information configured for this location."
+  },
+  "signUp": {
+    "noProgramsAlertMessage": "Sorry, there are no available programs.",
+    "noAvailableDatesAlertMessage": "Sorry, there are no available dates for this program. All dates for this program have passed.",
+    "noDatesAlertMessage": "Sorry, there are no dates for this program.",
+    "programRequiredErrorMessage": "Program is required",
+    "programDateRequiredErrorMessage": "Program Date is required",
+    "startTimeDisplayRequiredErrorMessage": "Start Time is required",
+    "endTimeDisplayRequiredErrorMessage": "End Time is required",
+    "emailAddressRequiredErrorMessage": "Email Address is required",
+    "firstNameRequiredErrorMessage": "First Name is required",
+    "lastNameRequiredErrorMessage": "Last Name is required",
+    "userPinWarningMessage": "User PIN not found. Please try a different user pin or enter your details manually.",
+    "searchUserPin": "TEST_ADMIN",
+    "searchUserEmail": "mistest@mmm.com",
+    "searchUserFirstName": "Admin",
+    "searchUserLastName": "Test",
+    "submittedAppointmentMessage": "You have successfully saved your appointments. You can view your appointments on the My Appointments tab.",
+    "timeSlotFilledAlertMessage": "Sorry, that time slot has been filled. Please select a different time slot.",
+    "invalidAppointmentAlertMessage": "Appointments not scheduled",
+    "appointmentCancelledAlertMessage": "Your appointment has been cancelled.",
+    "appointmentRescheduledAlertMessage": "Your appointment has been rescheduled. You will receive a cancellation email for your previous appointment, and a confirmation email for your new appointment.",
+    "noAppointmentsAlertMessage": "You do not have any upcoming appointments.",
+    "step1Message": "Step 1: Select a Program",
+    "step2Message": "Step 2: Select a date and time slot",
+    "step3Message": "Step 3: Enter your information",
+    "step4Message": "Step 4: Submit your appointment, or add an additional appointment"
+  },
+  "programAppointments": [
+    {
+      "startTime": "08:00 AM",
+      "endTime": "08:15 AM",
+      "name": "Today Test 1",
+      "pin": "012345",
+      "email": "mistest@mmm.com"
+    },
+    {
+      "startTime": "08:15 AM",
+      "endTime": "08:30 AM",
+      "name": "Today Test 2",
+      "pin": "012345",
+      "email": "mistest@mmm.com"
+    },
+    {
+      "startTime": "08:00 AM",
+      "endTime": "08:15 AM",
+      "name": "Tommorrow Test",
+      "pin": "012345",
+      "email": "mistest@mmm.com"
+    },
+    {
+      "startTime": "08:15 AM",
+      "endTime": "08:30 AM",
+      "name": "Day After Test",
+      "pin": "012345",
+      "email": "mistest@mmm.com"
+    },
+    {
+      "startTime": "08:15 AM",
+      "endTime": "08:30 AM",
+      "name": "Day Before Test",
+      "pin": "012345",
+      "email": "mistest@mmm.com"
+    },
+    {
+      "startTime": "08:00 AM",
+      "endTime": "08:15 AM",
+      "name": "Yesterday Test",
+      "pin": "012345",
+      "email": "mistest@mmm.com"
+    }
+  ]
+}
