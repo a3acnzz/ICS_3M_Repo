@@ -1,0 +1,30 @@
+<div [ngBusy]="busySave"></div>
+<div mat-dialog-title>
+  <div class="d-flex justify-content-between">
+    <div class="p-2">Cancellation</div>
+    <i class="fa fa-close p-2" (click)="this.dialogRef.close()"></i>
+  </div>
+</div>
+<mat-dialog-content>
+  <div class="row">
+    <div class="col">
+      <alert *ngFor="let alert of alerts; let i = index" [type]="alert.type">
+        {{ alert?.msg }}
+      </alert>
+    </div>
+  </div>
+  <div class="d-flex flex-column flex-md-row">
+    <div class="p-2">
+      <label class="col-form-label">Confirm Cancellation</label> <br/>
+      <input type="checkbox" class="example-margin" id="confirm" name="confirm" [(ngModel)]="confirm">Yes, I want to
+      cancel these appointments.
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="row">
+    <div class="col">
+      <button class="btn btn-primary" type="submit" [disabled]="!confirm" (click)="submit()">Submit</button>
+    </div>
+  </div>
+</mat-dialog-actions>

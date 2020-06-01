@@ -1,0 +1,220 @@
+<div class="d-flex flex-row">
+    <h4><a routerLink="../..">Sign-Up</a> / {{locationName}} </h4>
+    <div class="dropdown d-flex ml-auto">
+        <button class="btn btn-secondary d-flex" (click)="viewContactUs()">
+      Contact Us
+    </button>
+    </div>
+</div>
+<hr/>
+<alert type='primary' *ngIf="systemAnnouncement.length > 0" id="systemAnnouncement">
+    {{systemAnnouncement}}
+</alert>
+<alert type='primary' *ngIf="locationAnnouncement.length > 0" id="locationAnnouncement">
+    {{locationAnnouncement}}
+</alert>
+<alert *ngFor="let alert of alerts;let i = index" [type]="alert.type" [id]="alert.id" dismissible="true">
+    {{ alert?.msg }}
+</alert>
+<div [ngBusy]="busyLoading"></div>
+<!-- <div [ngBusy]="{busy: busyLoadingForListOfPendingAppointmentsRemoval, message: 'Loading...', minDuration: 10000}"></div> -->
+<div [ngBusy]="busySave"></div>
+<div class="card" style="margin-bottom: 16px;">
+    <div class="card-header">
+        <h4>
+            <a data-toggle="collapse" href="#collapseAvailablePrograms" onclick="$('#collapsed-chevron').toggleClass('fa-rotate-180')">
+        View Available Programs
+        <i class="fa fa-chevron-down pull-right" id="collapsed-chevron"></i>
+      </a>
+        </h4>
+    </div>
+</div>
+<div id="collapseAvailablePrograms" class="collapse" role="tabpanel">
+    <div class="row table-header">
+        <div class="col">
+            <div class="input-group input-group-sm">
+                <div class="input-group-prepend">
+                    <i class="input-group-text fa fa-filter"></i>
+                </div>
+                <input (input)="dt.filterGlobal($event.target.value, 'contains')" class="form-control form-control-sm d-flex" id="programFilterString" placeholder="Filter" aria-label="Filter programs">
+            </div>
+        </div>
+    </div>
+    <p-table #dt [value]="programList" [globalFilterFields]="['name']" [paginator]="programList?.length > rowsPerPage" [rows]="rowsPerPage" [rowsPerPageOptions]="rowsPerPageOptions" styleClass="MMM-prime-table">
+        <ng-template pTemplate="header">
+            <tr>
+                <th [pSortableColumn]="'name'">Program
+                    <p-sortIcon [field]="'name'"></p-sortIcon>
+                </th>
+                <th [pSortableColumn]="'venue'">Venue
+                    <p-sortIcon [field]="'venue'"></p-sortIcon>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-program>
+            <tr>
+                <td>{{program.name}}</td>
+                <td>{{program.venue}}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+    <br/>
+</div>
+
+<form #appointmentsForm="ngForm" (ngSubmit)="save(appointmentsForm)">
+    <div class="card">
+        <div class="card-header">
+            <h4>Make an Appointment</h4>
+        </div>
+        <div class="card-body" *ngFor="let appointment of appointments; let i = index; let l = last;">
+            <div class="d-flex flex-wrap flex-column flex-sm-row">
+                <h5 class="p-2 appointment-title mr-auto">Appointment #{{i + 1}}</h5>
+                <button [hidden]="isClearButtonHide(i)" class="p-2 btn btn-sm btn-warning" type="button" (click)="clearAppointment(appointment.programId, appointment.programDateId, appointment.timeSlotId, i)">
+                        Clear
+                </button>
+                <span class="p-2"></span>
+                <button class="p-2 btn btn-sm btn-danger" type="button" (click)="removeAppointment(appointment.programId, appointment.programDateId, appointment.timeSlotId, i)">
+                        Remove
+                </button>
+            </div>
+            <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                        <label class="col-form-label" id="programLabel">Program</label><label class="requiredSymbol">*</label>
+                        <div class="input-group">
+                            <span class="input-group-prepend">
+                <button class="btn btn-primary" type="button" id="selectProgram-appointment-{{i}}" tooltip="Select a program"
+                        triggers="mouseenter:mouseleave" [delay]="300" 
+                        (click)="selectProgram(locationId, appointment.programId, appointment.programDateId, appointment.timeSlotId, i)"
+                        [disabled]="isLookUpDisabled(i)" aria-label="Select a Program">
+                  <i class="fa fa-external-link" aria-hidden="true"></i>
+                </button>
+              </span>
+                            <input class="form-control" id="programName-appointment-{{i}}" name="programName{{i}}" [(ngModel)]="appointment.programName" #program="ngModel" required readonly aria-labelledby="programLabel">
+                        </div>
+                    </div>
+                    <alert type="primary" *ngIf="!appointment.programId" id="appointment-{{i}}-step1-msg">Step 1: Select a Program</alert>
+                    <alert type='danger' *ngIf="program.errors?.required && submitted" id="programRequiredError">
+                        Program is required
+                    </alert>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                        <label class="col-form-label" id="venueLabel">Venue</label><label class="requiredSymbol">*</label>
+                        <div class="input-group">
+                            <input class="form-control" id="programVenue-appointment-{{i}}" name="programVenue{{i}}" [(ngModel)]="appointment.programVenue" #programVenue="ngModel" required readonly aria-labelledby="venueLabel">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                        <label class="col-form-label" id="dateLabel">Date</label><label class="requiredSymbol">*</label>
+                        <div class="input-group">
+                            <span class="input-group-prepend">
+              <button class="btn btn-primary" type="button" id="selectDateTime-appointment-{{i}}" tooltip="Select a date and time"
+                      triggers="mouseenter:mouseleave" [delay]="300"
+                      (click)="selectProgramDate(appointment.programId, i)" [disabled]="appointment.programName === ''"
+                      aria-label="Select a date and time">
+                <i class="fa fa-external-link" aria-hidden="true"></i>
+              </button>
+              </span>
+                            <input class="form-control" id="programDate-appointment-{{i}}" name="programDate{{i}}" [(ngModel)]="appointment.date" #programDate="ngModel" required readonly aria-labelledby="dateLabel">
+                        </div>
+                    </div>
+                    <alert type="primary" *ngIf="appointment.programId && !appointment.programDateId" id="appointment-{{i}}-step2-msg">Step 2: Select a date and time slot
+                    </alert>
+                    <alert type='danger' *ngIf="programDate.errors?.required && submitted" id="programDateRequiredError">
+                        Program Date is required
+                    </alert>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                    <div class="form-group">
+                        <label class="col-form-label" id="startTimeLabel">Start Time</label><label class="requiredSymbol">*</label>
+                        <input class="form-control" id="startTime-appointment-{{i}}" name="startTime{{i}}" [(ngModel)]="appointment.startTimeDisplay" #startTime="ngModel" required readonly aria-labelledby="startTimeLabel">
+                    </div>
+                    <alert type='danger' *ngIf="startTime.errors?.required && submitted" id="startTimeDisplayRequiredError">
+                        Start Time is required
+                    </alert>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                    <div class="form-group">
+                        <label class="col-form-label" id="endTimeLabel">End Time</label><label class="requiredSymbol">*</label>
+                        <input class="form-control" id="endTime-appointment-{{i}}" name="endTime{{i}}" [(ngModel)]="appointment.endTimeDisplay" #endTime="ngModel" required readonly aria-labelledby="endTimeLabel">
+                    </div>
+                    <alert type='danger' *ngIf="endTime.errors?.required && submitted" id="endTimeDisplayRequiredError">
+                        End Time is required
+                    </alert>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                        <label class="col-form-label" id="userPinLabel">User PIN</label>
+                        <div class="input-group">
+                            <span class="input-group-prepend">
+              <button class="btn btn-primary" type="button" id="selectUserPin-appointment-{{i}}" (click)="selectUserPin(i)"
+                      tooltip="User search" triggers="mouseenter:mouseleave" [delay]="300"
+                      [disabled]="isLookUpDisabled(i)" aria-label="User search">
+                <i class="fa fa-external-link" aria-hidden="true"></i>
+              </button>
+              </span>
+                            <input class="form-control" id="pin-appointment-{{i}}" name="pin{{i}}" #userPin (keyup.enter)="getDetailsByUserByPin(userPin.value,i)" (blur)="getDetailsByUserByPin(userPin.value,i)" [(ngModel)]="appointment.pin" aria-labelledby="userPinLabel">
+                        </div>
+                        <sub>(e.g.: A###### or US######)</sub>
+                        <alert type='warning' *ngIf="!appointment?.pinIsValid && appointment?.pin?.length > 0" id="userPinWarning">
+                            User PIN not found. Please try a different user pin or enter your details manually.
+                        </alert>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                        <label class="col-form-label" id="emailLabel">Email</label><label class="requiredSymbol" *ngIf="appointment.emailRequired">*</label>
+                        <input type="email" class="form-control" id="emailAddress-appointment-{{i}}" name="emailAddress{{i}}" [(ngModel)]="appointment.emailAddress" #emailAddress="ngModel" [required]="appointment.emailRequired" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
+                            aria-labelledby="emailLabel">
+                    </div>
+                    <alert type='danger' *ngIf="emailAddress.errors?.required && submitted" id="emailAddressRequiredError">
+                        Email Address is required
+                    </alert>
+                    <alert type='danger' *ngIf="emailAddress.errors?.pattern && submitted" id="emailAddressError">
+                        Please enter a valid email
+                    </alert>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                        <label class="col-form-label" id="firstNameLabel">First Name</label><label class="requiredSymbol">*</label>
+                        <input class="form-control" id="firstName-appointment-{{i}}" name="firstName{{i}}" [(ngModel)]="appointment.firstName" #firstName="ngModel" required aria-labelledby="firstNameLabel">
+                    </div>
+                    <alert type='danger' *ngIf="firstName.errors?.required && submitted" id="firstNameRequiredError">
+                        First Name is required
+                    </alert>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                        <label class="col-form-label" id="lastNameLabel">Last Name</label><label class="requiredSymbol">*</label>
+                        <input class="form-control" id="lastName-appointment-{{i}}" name="lastName{{i}}" [(ngModel)]="appointment.lastName" #lastName="ngModel" required aria-labelledby="lastNameLabel">
+                    </div>
+                    <alert type='danger' *ngIf="lastName.errors?.required && submitted" id="lastNameRequiredError">
+                        Last Name is required
+                    </alert>
+                </div>
+            </div>
+            <alert type="primary" *ngIf="appointment.programId && appointment.programDateId && (!appointment.emailAddress || !appointment.firstName || !appointment.lastName)" id="appointment-{{i}}-step3-msg">
+                Step 3: Enter your information
+            </alert>
+            <alert type="primary" *ngIf="appointment.programId && appointment.programDateId && appointment.emailAddress && appointment.firstName && appointment.lastName && isShowStepFourInfo && i==isInfoMessageForMinAppointmentsPerUser(i)" id="appointment-{{i}}-step4-msg">
+                Step 4: You have selected a program that must have a minimum of {{appointment.minAppointmentsPerUser}} appointments per user. So please select the date and slot for the below forms before submission.
+            </alert>
+            <alert type="primary" *ngIf="appointmentsForm.valid && l" id="appointment-{{i}}-submit-appointments-msg">
+                Now you can submit your appointment, or add an additional appointment
+            </alert>
+        </div>
+        <div class="card-footer">
+            <div class="d-flex flex-wrap flex-column flex-sm-row justify-content-end">
+                <button class="p-2 btn btn-primary">Submit</button> &nbsp;
+                <button class="p-2 btn btn-secondary" type="button" (click)="addAppointment('external',0,1)">Add Additional Appointment</button>
+            </div>
+        </div>
+    </div>
+</form>

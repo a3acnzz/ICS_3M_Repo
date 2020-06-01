@@ -1,0 +1,11 @@
+.navbar-nav {
+  width: 100%;
+}
+
+nav {
+  margin-bottom: 1rem;
+}
+
+.navbar-text {
+  padding-right: 8px;
+}

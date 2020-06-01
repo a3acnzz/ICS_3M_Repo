@@ -1,0 +1,53 @@
+<div [ngBusy]="busyLoading"></div>
+<div mat-dialog-title>
+    <div class="d-flex justify-content-between">
+        <div class="p-2">Select Appointment Date & Time</div>
+        <i class="fa fa-close p-2" (click)="this.dialogRef.close(null)" id="closeDialog"></i>
+    </div>
+</div>
+<mat-dialog-content style="min-width: 60vw;">
+    <alert *ngFor="let alert of alerts;let i = index" [type]="alert.type" [id]="alert.id">
+        {{ alert?.msg }}
+    </alert>
+    <div class="row">
+        <div class="col">
+            <div *ngFor="let programDate of program.programDates; let i = index;">
+                <div *ngIf="compareDate(programDate.date) == 1 || compareDate(programDate.date) == 0">
+                    <div class="card">
+                        <div class="card-header" role="tab" id="heading{{index}}">
+                            <div class="d-flex flex-row">
+                                <h5 class="mb-0 d-flex">
+                                    <a data-toggle="collapse" href="#collapse{{i}}" (click)="getProgramDateTimeSlots(programDate.id, i)">
+                                         {{programDate.displayDate | date:'fullDate'}}
+                                    </a>
+                                </h5>
+                            </div>
+                        </div>
+                        <div id="collapse{{i}}" class="collapse" role="tabpanel">
+                            <table class="table table-sm" *ngIf="programDate?.timeSlots?.length > 0">
+                                <thead>
+                                    <tr>
+                                        <th>Start Time</th>
+                                        <th>End Time</th>
+                                        <th>Available Appointments</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody *ngFor="let timeSlot of programDate?.timeSlots; let j = index;">
+                                    <tr *ngIf="validateTimeSlot(programDate?.date, timeSlot?.startTime) && timeSlot.availableAppointments > 0">
+                                        <td [id]="'program-date-' + i + '-time-slot-' + j + '-start-time'">{{timeSlot.startTimeDisplay}}</td>
+                                        <td [id]="'program-date-' + i + '-time-slot-' + j + '-end-time'">{{timeSlot.endTimeDisplay}}</td>
+                                        <td [id]="'program-date-' + i + '-time-slot-' + j + '-available'">{{timeSlot.availableAppointments}}</td>
+                                        <td>
+                                            <button class="btn btn-primary" (click)="selectTimeSlot(i, j)" [id]="'select-program-date-' + i + '-time-slot-' + j" [disabled]="timeSlot.availableAppointments < 1">Select</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</mat-dialog-content>
