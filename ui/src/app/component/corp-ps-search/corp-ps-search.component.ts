@@ -8,7 +8,6 @@ import { Subscription } from "rxjs";
 import * as moment from 'moment';
 import { AppConstant } from 'src/app/shared/constant/app.constant';
 import { User } from 'src/app/model/User';
-import { delay } from 'rxjs/operators';
 @Component({
   selector: 'app-corp-ps-search',
   templateUrl: './corp-ps-search.component.html',
@@ -99,7 +98,7 @@ export class CorpPsSearchComponent implements OnInit, AfterViewInit {
   orderFromPopup() {
     this.orderDisplay = true;
   }
-  /**getDetailsBySupplierName Fumction
+  /**getDetailsBySupplierName 
    * 
    * @param supplierNameEntered 
    *  if (this.userSupplierName.charAt(0) === '%' || this.userSupplierName.charAt(this.userSupplierName.length - 1) === '%') {
@@ -108,7 +107,7 @@ export class CorpPsSearchComponent implements OnInit, AfterViewInit {
         this.userSupplierName = supplierNameEntered.trim() + '%';
       }
    */
-  getDetailsBySupplierName(supplierNameEntered: string): boolean {
+  getDetailsBySupplierName(supplierNameEntered: string) {
     this.supplierTabOutPerformed = true;
 
     this.userSupplierName = '';
@@ -120,24 +119,18 @@ export class CorpPsSearchComponent implements OnInit, AfterViewInit {
           if (results.length === 0) {
             this.supplierNameNotAvailable = true;
             this.supplierNameNotAvailableMsg = AppConstant.supplierNameNotAvailableMsg;
-            return false;
           } else if (results.length === 1) {
             this.supplierNameNotAvailable = false;
             this.handleOrder(results[0]);
-            return true;
           } else if (results.length > 1) {
             this.supplierNameNotAvailable = false;
             this.orderFromPopup();
-            return false;
           }
         } else {
           this.supplierNameNotAvailable = true;
           this.supplierNameNotAvailableMsg = AppConstant.supplierNameNotAvailableMsg;
-          return false;
         }
       });
-    } else {
-      return true;
     }
   }
   /**
@@ -318,19 +311,7 @@ export class CorpPsSearchComponent implements OnInit, AfterViewInit {
     this.contactNameNotAvailable = false;
     this.supplierNameNotAvailable = false;
 
-    let supplierValueEntered: boolean = false;
-    let contactValueEntered: boolean = true;
-
     if (this.supplierTabOutPerformed) {
-      supplierValueEntered = true;
-    } else {
-      supplierValueEntered = this.getDetailsBySupplierName(this.searchForm.get('supplier').value);
-      setTimeout(() => {
-        console.log(supplierValueEntered)
-      }, 3000);
-    }
-
-    if (supplierValueEntered && contactValueEntered) {
       this.first = 0;
       let corpSearch = new CorpsSearch();
       if (this.searchForm.get("status").value === "viewAll")
@@ -386,6 +367,9 @@ export class CorpPsSearchComponent implements OnInit, AfterViewInit {
             this.noRecordFoundInd = true;
           }
         });
+    } else {
+      this.getDetailsBySupplierName(this.searchForm.get('supplier').value);
+      // this.searchCorps();
     }
   }
 
@@ -454,7 +438,7 @@ export class CorpPsSearchComponent implements OnInit, AfterViewInit {
     }
     else {
       this.noValue = true;
-      return false;
+      return false
     }
   }
 
