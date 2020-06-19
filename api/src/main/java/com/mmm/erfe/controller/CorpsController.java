@@ -370,11 +370,13 @@ public class CorpsController extends BaseController {
 	public ResponseEntity<Collection<ProviderMaster>> getProviderMaster(@RequestParam("base") String base,
 			@RequestParam("supplierName") String supplierName) {
 
-		if (supplierName.length() > 0) {
-			if (supplierName.charAt(0) == '%' || supplierName.charAt(supplierName.length() - 1) == '%') {
-				supplierName = supplierName.trim();
-			} else {
-				supplierName = "%" + supplierName.trim() + "%";
+		if (supplierName != null) {
+			if (supplierName.length() > 0) {
+				if (supplierName.charAt(0) == '%' || supplierName.charAt(supplierName.length() - 1) == '%') {
+					supplierName = supplierName.trim();
+				} else {
+					supplierName = "%" + supplierName.trim() + "%";
+				}
 			}
 		}
 		Collection<ProviderMaster> providerMaster = providerMasterService.findAll(base, supplierName);

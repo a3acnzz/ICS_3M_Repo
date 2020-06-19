@@ -26,11 +26,12 @@
                                 <h6>Contact<span class="pl-2"><i class="fa fa-question-circle" aria-hidden="true" tooltip="Format for auto-population: Last Name<space>First Name or Last Name alone (e.g. Smith John  / Smith). '%' can be added for wildcard search." placement="right"></i></span></h6>
                                 <div class="ui-inputgroup">
                                     <span class="input-group-prepend">
-                                        <button class="btn btn-primary" type="button" (click)="contactPopupWithUpdatedNames(searchForm.get('contact').value)" tooltip="Search pop-up" aria-label="Search pop-up">
+                                        <button class="btn btn-primary" type="button" [disabled]="contactButtonDisabled" (click)="contactPopupWithUpdatedNames(searchForm.get('contact').value)" tooltip="Search pop-up" aria-label="Search pop-up">
                                             <i class="fa fa-external-link" aria-hidden="true"></i>
                                         </button>
                                     </span>
-                                    <input type="text" class="form-control" name="contact" id="contact" placeholder="Contact" formControlName="contact" (keydown.Tab)="getDetailsByUserName(searchForm.get('contact').value)" pInputText #contact>
+                                    <input type="text" class="form-control" name="contact" id="contact" placeholder="Contact" formControlName="contact" (keydown.Tab)="getDetailsByUserName(searchForm.get('contact').value, 'external')" (focusin)="contactTabOutPerformed = false; contactButtonDisabled = false;"
+                                        pInputText #contact>
                                 </div>
                                 <!-- popup-->
                                 <p-dialog header="Select Contact Name" appendTo="body" [modal]="true" [positionTop]='150' [focusOnShow]="false" [(visible)]="contactDisplay" [responsive]='true' [dismissableMask]='true' [style]="{width: '95%', height: 'auto','position':'absolute'}" (onShow)="commonFormDisplayForContact.focusLastName(); commonFormDisplayForContact.populateNames(userLastName, userFirstName);"
@@ -51,11 +52,12 @@
                                 <h6>Supplier</h6>
                                 <div class="ui-inputgroup">
                                     <span class="input-group-prepend">
-                                        <button class="btn btn-primary" type="button" (click)="orderFromPopup()" tooltip="Search pop-up" aria-label="Search pop-up">
+                                        <button class="btn btn-primary" type="button" [disabled]="supplierButtonDisabled" (click)="orderFromPopup()" tooltip="Search pop-up" aria-label="Search pop-up">
                                             <i class="fa fa-external-link" aria-hidden="true"></i>
                                         </button>
                                     </span>
-                                    <input type="text" class="form-control" id="supplier" name="supplier" placeholder="Supplier" formControlName="supplier" (keydown.Tab)="getDetailsBySupplierName(searchForm.get('supplier').value)" (focusin)="supplierTabOutPerformed = false" pInputText>
+                                    <input type="text" class="form-control" id="supplier" name="supplier" placeholder="Supplier" formControlName="supplier" (keydown.Tab)="getDetailsBySupplierName(searchForm.get('supplier').value, 'external')" (focusin)="supplierTabOutPerformed = false; supplierButtonDisabled = false;"
+                                        pInputText>
                                 </div>
                                 <p-message severity="error" [text]="supplierNameNotAvailableMsg" *ngIf="supplierNameNotAvailable">
                                 </p-message>

@@ -2853,235 +2853,237 @@ export class NewRFEDocumentComponent implements OnInit, OnDestroy {
     getDetailsByUserName(userNameEntered: string, calledBy: string, inComingIndex: number) {
         this.userLastName = '';
         this.userFirstName = '';
-        if (userNameEntered.length > 0) {
-            let userName = userNameEntered.trim();
-            let noOfSpaces = userName.split(' ').length - 1;
-            if (noOfSpaces === 0 || noOfSpaces === 1) {
-                if (userName.indexOf(' ') < 0) {
-                    this.userLastName = userName;
+        if (userNameEntered !== null && userNameEntered !== undefined) {
+            if (userNameEntered.length > 0) {
+                let userName = userNameEntered.trim();
+                let noOfSpaces = userName.split(' ').length - 1;
+                if (noOfSpaces === 0 || noOfSpaces === 1) {
+                    if (userName.indexOf(' ') < 0) {
+                        this.userLastName = userName;
+                    } else {
+                        this.userLastName = userName.substr(0, userName.indexOf(' '));
+                        this.userFirstName = userName.substr(userName.indexOf(' ') + 1, userName.length - 1);
+                    }
+
+                    let user = new User();
+                    user.personId = '';
+                    user.personLastName = this.userLastName;
+                    user.personFirstName = this.userFirstName;
+                    user.userPin = '';
+                    this.busyLoading = this.datum.getglobalUser(user).subscribe((results: any[]) => {
+                        if (results) {
+                            results = results.map(result => {
+                                return {
+                                    personName: result.personFirstName + ' ' + result.personMiddleName + ' ' + result.personLastName,
+                                    userPin: result.userPin,
+                                    personId: result.personId,
+                                    personPhoneNum: result.personPhoneNum,
+                                    deptCode: result.deptCode,
+                                    deptName: result.deptName,
+
+                                    personFirstName: result.personFirstName,
+                                    personMiddleName: result.personMiddleName,
+                                    personLastName: result.personLastName,
+                                };
+                            });
+                            if (results.length === 0) {
+                                if (calledBy === 'siteContactName') {
+                                    this.newRFEDocument.controls['siteContactName'].setValue('');
+                                    this.newRFEDocument.controls['phoneNumber'].setValue('');
+                                    this.newRFEDocument.controls['personID'].setValue('');
+                                    this.siteContactNameNotAvailable = true;
+                                    this.siteContactNameNotAvailableMsg = AppConstant.nameNotAvailableMsg;
+                                } else if (calledBy === 'projectCoordinator') {
+                                    this.newRFEDocument.controls['projectCoordinator'].setValue('');
+                                    this.newRFEDocument.controls['coordinatorPhoneNumber'].setValue('');
+                                    this.newRFEDocument.controls['coordinatorPersonID'].setValue('');
+                                    this.projectCoordinatorNameNotAvailable = true;
+                                    this.projectCoordinatorNameNotAvailableMsg = AppConstant.nameNotAvailableMsg;
+                                } else if (calledBy === 'infoName') {
+                                    this.newRFEDocument.get(['informationalCopy', inComingIndex, 'infoName']).setValue('');
+                                    this.newRFEDocument.get(['informationalCopy', inComingIndex, 'infoPersonId']).setValue('');
+                                    this.infoMsgIndex = inComingIndex;
+                                    this.inforNameNotAvailable = true;
+                                    this.inforNameNotAvailableMsg = AppConstant.nameNotAvailableMsg;
+                                }
+                            } else if (results.length === 1) {
+                                if (calledBy === 'siteContactName') {
+                                    this.siteContactNameNotAvailable = false;
+                                    this.handleName(results[0]);
+                                } else if (calledBy === 'projectCoordinator') {
+                                    this.projectCoordinatorNameNotAvailable = false;
+                                    this.handleCoordinators(results[0]);
+                                } else if (calledBy === 'infoName') {
+                                    this.inforNameNotAvailable = false;
+                                    this.index = inComingIndex;
+                                    this.handleInformation(results[0]);
+                                }
+                            } else if (results.length > 1) {
+                                if (calledBy === 'siteContactName') {
+                                    this.newRFEDocument.controls['siteContactName'].setValue('');
+                                    this.newRFEDocument.controls['phoneNumber'].setValue('');
+                                    this.newRFEDocument.controls['personID'].setValue('');
+                                    this.siteContactNameNotAvailable = false;
+                                    this.siteNamePopup();
+                                } else if (calledBy === 'projectCoordinator') {
+                                    this.newRFEDocument.controls['projectCoordinator'].setValue('');
+                                    this.newRFEDocument.controls['coordinatorPhoneNumber'].setValue('');
+                                    this.newRFEDocument.controls['coordinatorPersonID'].setValue('');
+                                    this.projectCoordinatorNameNotAvailable = false;
+                                    this.ptCoordinaterPopup();
+                                } else if (calledBy === 'infoName') {
+                                    this.newRFEDocument.get(['informationalCopy', inComingIndex, 'infoName']).setValue('');
+                                    this.newRFEDocument.get(['informationalCopy', inComingIndex, 'infoPersonId']).setValue('');
+                                    this.inforNameNotAvailable = false;
+                                    this.informationPopup(inComingIndex);
+                                }
+                            }
+                        } else {
+                            if (calledBy === 'siteContactName') {
+                                this.newRFEDocument.controls['siteContactName'].setValue('');
+                                this.newRFEDocument.controls['phoneNumber'].setValue('');
+                                this.newRFEDocument.controls['personID'].setValue('');
+                                this.siteContactNameNotAvailable = true;
+                                this.siteContactNameNotAvailableMsg = AppConstant.nameNotAvailableMsg;
+                            } else if (calledBy === 'projectCoordinator') {
+                                this.newRFEDocument.controls['projectCoordinator'].setValue('');
+                                this.newRFEDocument.controls['coordinatorPhoneNumber'].setValue('');
+                                this.newRFEDocument.controls['coordinatorPersonID'].setValue('');
+                                this.projectCoordinatorNameNotAvailable = true;
+                                this.projectCoordinatorNameNotAvailableMsg = AppConstant.nameNotAvailableMsg;
+                            } else if (calledBy === 'infoName') {
+                                this.newRFEDocument.get(['informationalCopy', inComingIndex, 'infoName']).setValue('');
+                                this.newRFEDocument.get(['informationalCopy', inComingIndex, 'infoPersonId']).setValue('');
+                                this.infoMsgIndex = inComingIndex;
+                                this.inforNameNotAvailable = true;
+                                this.inforNameNotAvailableMsg = AppConstant.nameNotAvailableMsg;
+                            }
+                        }
+                    });
+                } else if (noOfSpaces === 2) {
+                    let index = 0;
+                    let indexOfSpace = [];
+                    while ((index = userName.indexOf(' ', index + 1)) > 0) {
+                        indexOfSpace.push(index);
+                    }
+                    this.userFirstName = userName.substr(0, indexOfSpace[0]);
+                    this.userLastName = userName.substr(indexOfSpace[1] + 1, userName.length - 1);
+
+                    let user = new User();
+                    user.personId = '';
+                    user.personLastName = this.userLastName;
+                    user.personFirstName = this.userFirstName;
+                    user.userPin = '';
+                    this.busyLoading = this.datum.getglobalUser(user).subscribe((results: any[]) => {
+                        if (results) {
+                            results = results.map(result => {
+                                return {
+                                    personName: result.personFirstName + ' ' + result.personMiddleName + ' ' + result.personLastName,
+                                    userPin: result.userPin,
+                                    personId: result.personId,
+                                    personPhoneNum: result.personPhoneNum,
+                                    deptCode: result.deptCode,
+                                    deptName: result.deptName,
+
+                                    personFirstName: result.personFirstName,
+                                    personMiddleName: result.personMiddleName,
+                                    personLastName: result.personLastName,
+                                };
+                            });
+                            if (results.length === 0) {
+                                if (calledBy === 'siteContactName') {
+                                    this.newRFEDocument.controls['siteContactName'].setValue('');
+                                    this.newRFEDocument.controls['phoneNumber'].setValue('');
+                                    this.newRFEDocument.controls['personID'].setValue('');
+                                    this.siteContactNameNotAvailable = true;
+                                    this.siteContactNameNotAvailableMsg = AppConstant.nameNotAvailableMsg;
+                                } else if (calledBy === 'projectCoordinator') {
+                                    this.newRFEDocument.controls['projectCoordinator'].setValue('');
+                                    this.newRFEDocument.controls['coordinatorPhoneNumber'].setValue('');
+                                    this.newRFEDocument.controls['coordinatorPersonID'].setValue('');
+                                    this.projectCoordinatorNameNotAvailable = true;
+                                    this.projectCoordinatorNameNotAvailableMsg = AppConstant.nameNotAvailableMsg;
+                                } else if (calledBy === 'infoName') {
+                                    this.newRFEDocument.get(['informationalCopy', inComingIndex, 'infoName']).setValue('');
+                                    this.newRFEDocument.get(['informationalCopy', inComingIndex, 'infoPersonId']).setValue('');
+                                    this.infoMsgIndex = inComingIndex;
+                                    this.inforNameNotAvailable = true;
+                                    this.inforNameNotAvailableMsg = AppConstant.nameNotAvailableMsg;
+                                }
+                            } else if (results.length === 1) {
+                                if (calledBy === 'siteContactName') {
+                                    this.siteContactNameNotAvailable = false;
+                                    this.handleName(results[0]);
+                                } else if (calledBy === 'projectCoordinator') {
+                                    this.projectCoordinatorNameNotAvailable = false;
+                                    this.handleCoordinators(results[0]);
+                                } else if (calledBy === 'infoName') {
+                                    this.inforNameNotAvailable = false;
+                                    this.index = inComingIndex;
+                                    this.handleInformation(results[0]);
+                                }
+                            } else if (results.length > 1) {
+                                if (calledBy === 'siteContactName') {
+                                    this.newRFEDocument.controls['siteContactName'].setValue('');
+                                    this.newRFEDocument.controls['phoneNumber'].setValue('');
+                                    this.newRFEDocument.controls['personID'].setValue('');
+                                    this.siteContactNameNotAvailable = false;
+                                    this.siteNamePopup();
+                                } else if (calledBy === 'projectCoordinator') {
+                                    this.newRFEDocument.controls['projectCoordinator'].setValue('');
+                                    this.newRFEDocument.controls['coordinatorPhoneNumber'].setValue('');
+                                    this.newRFEDocument.controls['coordinatorPersonID'].setValue('');
+                                    this.projectCoordinatorNameNotAvailable = false;
+                                    this.ptCoordinaterPopup();
+                                } else if (calledBy === 'infoName') {
+                                    this.newRFEDocument.get(['informationalCopy', inComingIndex, 'infoName']).setValue('');
+                                    this.newRFEDocument.get(['informationalCopy', inComingIndex, 'infoPersonId']).setValue('');
+                                    this.inforNameNotAvailable = false;
+                                    this.informationPopup(inComingIndex);
+                                }
+                            }
+                        } else {
+                            if (calledBy === 'siteContactName') {
+                                this.newRFEDocument.controls['siteContactName'].setValue('');
+                                this.newRFEDocument.controls['phoneNumber'].setValue('');
+                                this.newRFEDocument.controls['personID'].setValue('');
+                                this.siteContactNameNotAvailable = true;
+                                this.siteContactNameNotAvailableMsg = AppConstant.nameNotAvailableMsg;
+                            } else if (calledBy === 'projectCoordinator') {
+                                this.newRFEDocument.controls['projectCoordinator'].setValue('');
+                                this.newRFEDocument.controls['coordinatorPhoneNumber'].setValue('');
+                                this.newRFEDocument.controls['coordinatorPersonID'].setValue('');
+                                this.projectCoordinatorNameNotAvailable = true;
+                                this.projectCoordinatorNameNotAvailableMsg = AppConstant.nameNotAvailableMsg;
+                            } else if (calledBy === 'infoName') {
+                                this.newRFEDocument.get(['informationalCopy', inComingIndex, 'infoName']).setValue('');
+                                this.newRFEDocument.get(['informationalCopy', inComingIndex, 'infoPersonId']).setValue('');
+                                this.infoMsgIndex = inComingIndex;
+                                this.inforNameNotAvailable = true;
+                                this.inforNameNotAvailableMsg = AppConstant.nameNotAvailableMsg;
+                            }
+                        }
+                    });
                 } else {
-                    this.userLastName = userName.substr(0, userName.indexOf(' '));
-                    this.userFirstName = userName.substr(userName.indexOf(' ') + 1, userName.length - 1);
-                }
-
-                let user = new User();
-                user.personId = '';
-                user.personLastName = this.userLastName;
-                user.personFirstName = this.userFirstName;
-                user.userPin = '';
-                this.busyLoading = this.datum.getglobalUser(user).subscribe((results: any[]) => {
-                    if (results) {
-                        results = results.map(result => {
-                            return {
-                                personName: result.personFirstName + ' ' + result.personMiddleName + ' ' + result.personLastName,
-                                userPin: result.userPin,
-                                personId: result.personId,
-                                personPhoneNum: result.personPhoneNum,
-                                deptCode: result.deptCode,
-                                deptName: result.deptName,
-
-                                personFirstName: result.personFirstName,
-                                personMiddleName: result.personMiddleName,
-                                personLastName: result.personLastName,
-                            };
-                        });
-                        if (results.length === 0) {
-                            if (calledBy === 'siteContactName') {
-                                this.newRFEDocument.controls['siteContactName'].setValue('');
-                                this.newRFEDocument.controls['phoneNumber'].setValue('');
-                                this.newRFEDocument.controls['personID'].setValue('');
-                                this.siteContactNameNotAvailable = true;
-                                this.siteContactNameNotAvailableMsg = AppConstant.nameNotAvailableMsg;
-                            } else if (calledBy === 'projectCoordinator') {
-                                this.newRFEDocument.controls['projectCoordinator'].setValue('');
-                                this.newRFEDocument.controls['coordinatorPhoneNumber'].setValue('');
-                                this.newRFEDocument.controls['coordinatorPersonID'].setValue('');
-                                this.projectCoordinatorNameNotAvailable = true;
-                                this.projectCoordinatorNameNotAvailableMsg = AppConstant.nameNotAvailableMsg;
-                            } else if (calledBy === 'infoName') {
-                                this.newRFEDocument.get(['informationalCopy', inComingIndex, 'infoName']).setValue('');
-                                this.newRFEDocument.get(['informationalCopy', inComingIndex, 'infoPersonId']).setValue('');
-                                this.infoMsgIndex = inComingIndex;
-                                this.inforNameNotAvailable = true;
-                                this.inforNameNotAvailableMsg = AppConstant.nameNotAvailableMsg;
-                            }
-                        } else if (results.length === 1) {
-                            if (calledBy === 'siteContactName') {
-                                this.siteContactNameNotAvailable = false;
-                                this.handleName(results[0]);
-                            } else if (calledBy === 'projectCoordinator') {
-                                this.projectCoordinatorNameNotAvailable = false;
-                                this.handleCoordinators(results[0]);
-                            } else if (calledBy === 'infoName') {
-                                this.inforNameNotAvailable = false;
-                                this.index = inComingIndex;
-                                this.handleInformation(results[0]);
-                            }
-                        } else if (results.length > 1) {
-                            if (calledBy === 'siteContactName') {
-                                this.newRFEDocument.controls['siteContactName'].setValue('');
-                                this.newRFEDocument.controls['phoneNumber'].setValue('');
-                                this.newRFEDocument.controls['personID'].setValue('');
-                                this.siteContactNameNotAvailable = false;
-                                this.siteNamePopup();
-                            } else if (calledBy === 'projectCoordinator') {
-                                this.newRFEDocument.controls['projectCoordinator'].setValue('');
-                                this.newRFEDocument.controls['coordinatorPhoneNumber'].setValue('');
-                                this.newRFEDocument.controls['coordinatorPersonID'].setValue('');
-                                this.projectCoordinatorNameNotAvailable = false;
-                                this.ptCoordinaterPopup();
-                            } else if (calledBy === 'infoName') {
-                                this.newRFEDocument.get(['informationalCopy', inComingIndex, 'infoName']).setValue('');
-                                this.newRFEDocument.get(['informationalCopy', inComingIndex, 'infoPersonId']).setValue('');
-                                this.inforNameNotAvailable = false;
-                                this.informationPopup(inComingIndex);
-                            }
-                        }
-                    } else {
-                        if (calledBy === 'siteContactName') {
-                            this.newRFEDocument.controls['siteContactName'].setValue('');
-                            this.newRFEDocument.controls['phoneNumber'].setValue('');
-                            this.newRFEDocument.controls['personID'].setValue('');
-                            this.siteContactNameNotAvailable = true;
-                            this.siteContactNameNotAvailableMsg = AppConstant.nameNotAvailableMsg;
-                        } else if (calledBy === 'projectCoordinator') {
-                            this.newRFEDocument.controls['projectCoordinator'].setValue('');
-                            this.newRFEDocument.controls['coordinatorPhoneNumber'].setValue('');
-                            this.newRFEDocument.controls['coordinatorPersonID'].setValue('');
-                            this.projectCoordinatorNameNotAvailable = true;
-                            this.projectCoordinatorNameNotAvailableMsg = AppConstant.nameNotAvailableMsg;
-                        } else if (calledBy === 'infoName') {
-                            this.newRFEDocument.get(['informationalCopy', inComingIndex, 'infoName']).setValue('');
-                            this.newRFEDocument.get(['informationalCopy', inComingIndex, 'infoPersonId']).setValue('');
-                            this.infoMsgIndex = inComingIndex;
-                            this.inforNameNotAvailable = true;
-                            this.inforNameNotAvailableMsg = AppConstant.nameNotAvailableMsg;
-                        }
+                    if (calledBy === 'siteContactName') {
+                        this.newRFEDocument.controls['siteContactName'].setValue('');
+                        this.newRFEDocument.controls['phoneNumber'].setValue('');
+                        this.newRFEDocument.controls['personID'].setValue('');
+                        this.siteContactNameNotAvailable = true;
+                        this.siteContactNameNotAvailableMsg = AppConstant.wrongNameFormat;
+                    } else if (calledBy === 'projectCoordinator') {
+                        this.newRFEDocument.controls['projectCoordinator'].setValue('');
+                        this.newRFEDocument.controls['coordinatorPhoneNumber'].setValue('');
+                        this.newRFEDocument.controls['coordinatorPersonID'].setValue('');
+                        this.projectCoordinatorNameNotAvailable = true;
+                        this.projectCoordinatorNameNotAvailableMsg = AppConstant.wrongNameFormat;
+                    } else if (calledBy === 'infoName') {
+                        this.newRFEDocument.get(['informationalCopy', inComingIndex, 'infoName']).setValue('');
+                        this.newRFEDocument.get(['informationalCopy', inComingIndex, 'infoPersonId']).setValue('');
+                        this.infoMsgIndex = inComingIndex;
+                        this.inforNameNotAvailable = true;
+                        this.inforNameNotAvailableMsg = AppConstant.wrongNameFormat;
                     }
-                });
-            } else if (noOfSpaces === 2) {
-                let index = 0;
-                let indexOfSpace = [];
-                while ((index = userName.indexOf(' ', index + 1)) > 0) {
-                    indexOfSpace.push(index);
-                }
-                this.userFirstName = userName.substr(0, indexOfSpace[0]);
-                this.userLastName = userName.substr(indexOfSpace[1] + 1, userName.length - 1);
-
-                let user = new User();
-                user.personId = '';
-                user.personLastName = this.userLastName;
-                user.personFirstName = this.userFirstName;
-                user.userPin = '';
-                this.busyLoading = this.datum.getglobalUser(user).subscribe((results: any[]) => {
-                    if (results) {
-                        results = results.map(result => {
-                            return {
-                                personName: result.personFirstName + ' ' + result.personMiddleName + ' ' + result.personLastName,
-                                userPin: result.userPin,
-                                personId: result.personId,
-                                personPhoneNum: result.personPhoneNum,
-                                deptCode: result.deptCode,
-                                deptName: result.deptName,
-
-                                personFirstName: result.personFirstName,
-                                personMiddleName: result.personMiddleName,
-                                personLastName: result.personLastName,
-                            };
-                        });
-                        if (results.length === 0) {
-                            if (calledBy === 'siteContactName') {
-                                this.newRFEDocument.controls['siteContactName'].setValue('');
-                                this.newRFEDocument.controls['phoneNumber'].setValue('');
-                                this.newRFEDocument.controls['personID'].setValue('');
-                                this.siteContactNameNotAvailable = true;
-                                this.siteContactNameNotAvailableMsg = AppConstant.nameNotAvailableMsg;
-                            } else if (calledBy === 'projectCoordinator') {
-                                this.newRFEDocument.controls['projectCoordinator'].setValue('');
-                                this.newRFEDocument.controls['coordinatorPhoneNumber'].setValue('');
-                                this.newRFEDocument.controls['coordinatorPersonID'].setValue('');
-                                this.projectCoordinatorNameNotAvailable = true;
-                                this.projectCoordinatorNameNotAvailableMsg = AppConstant.nameNotAvailableMsg;
-                            } else if (calledBy === 'infoName') {
-                                this.newRFEDocument.get(['informationalCopy', inComingIndex, 'infoName']).setValue('');
-                                this.newRFEDocument.get(['informationalCopy', inComingIndex, 'infoPersonId']).setValue('');
-                                this.infoMsgIndex = inComingIndex;
-                                this.inforNameNotAvailable = true;
-                                this.inforNameNotAvailableMsg = AppConstant.nameNotAvailableMsg;
-                            }
-                        } else if (results.length === 1) {
-                            if (calledBy === 'siteContactName') {
-                                this.siteContactNameNotAvailable = false;
-                                this.handleName(results[0]);
-                            } else if (calledBy === 'projectCoordinator') {
-                                this.projectCoordinatorNameNotAvailable = false;
-                                this.handleCoordinators(results[0]);
-                            } else if (calledBy === 'infoName') {
-                                this.inforNameNotAvailable = false;
-                                this.index = inComingIndex;
-                                this.handleInformation(results[0]);
-                            }
-                        } else if (results.length > 1) {
-                            if (calledBy === 'siteContactName') {
-                                this.newRFEDocument.controls['siteContactName'].setValue('');
-                                this.newRFEDocument.controls['phoneNumber'].setValue('');
-                                this.newRFEDocument.controls['personID'].setValue('');
-                                this.siteContactNameNotAvailable = false;
-                                this.siteNamePopup();
-                            } else if (calledBy === 'projectCoordinator') {
-                                this.newRFEDocument.controls['projectCoordinator'].setValue('');
-                                this.newRFEDocument.controls['coordinatorPhoneNumber'].setValue('');
-                                this.newRFEDocument.controls['coordinatorPersonID'].setValue('');
-                                this.projectCoordinatorNameNotAvailable = false;
-                                this.ptCoordinaterPopup();
-                            } else if (calledBy === 'infoName') {
-                                this.newRFEDocument.get(['informationalCopy', inComingIndex, 'infoName']).setValue('');
-                                this.newRFEDocument.get(['informationalCopy', inComingIndex, 'infoPersonId']).setValue('');
-                                this.inforNameNotAvailable = false;
-                                this.informationPopup(inComingIndex);
-                            }
-                        }
-                    } else {
-                        if (calledBy === 'siteContactName') {
-                            this.newRFEDocument.controls['siteContactName'].setValue('');
-                            this.newRFEDocument.controls['phoneNumber'].setValue('');
-                            this.newRFEDocument.controls['personID'].setValue('');
-                            this.siteContactNameNotAvailable = true;
-                            this.siteContactNameNotAvailableMsg = AppConstant.nameNotAvailableMsg;
-                        } else if (calledBy === 'projectCoordinator') {
-                            this.newRFEDocument.controls['projectCoordinator'].setValue('');
-                            this.newRFEDocument.controls['coordinatorPhoneNumber'].setValue('');
-                            this.newRFEDocument.controls['coordinatorPersonID'].setValue('');
-                            this.projectCoordinatorNameNotAvailable = true;
-                            this.projectCoordinatorNameNotAvailableMsg = AppConstant.nameNotAvailableMsg;
-                        } else if (calledBy === 'infoName') {
-                            this.newRFEDocument.get(['informationalCopy', inComingIndex, 'infoName']).setValue('');
-                            this.newRFEDocument.get(['informationalCopy', inComingIndex, 'infoPersonId']).setValue('');
-                            this.infoMsgIndex = inComingIndex;
-                            this.inforNameNotAvailable = true;
-                            this.inforNameNotAvailableMsg = AppConstant.nameNotAvailableMsg;
-                        }
-                    }
-                });
-            } else {
-                if (calledBy === 'siteContactName') {
-                    this.newRFEDocument.controls['siteContactName'].setValue('');
-                    this.newRFEDocument.controls['phoneNumber'].setValue('');
-                    this.newRFEDocument.controls['personID'].setValue('');
-                    this.siteContactNameNotAvailable = true;
-                    this.siteContactNameNotAvailableMsg = AppConstant.wrongNameFormat;
-                } else if (calledBy === 'projectCoordinator') {
-                    this.newRFEDocument.controls['projectCoordinator'].setValue('');
-                    this.newRFEDocument.controls['coordinatorPhoneNumber'].setValue('');
-                    this.newRFEDocument.controls['coordinatorPersonID'].setValue('');
-                    this.projectCoordinatorNameNotAvailable = true;
-                    this.projectCoordinatorNameNotAvailableMsg = AppConstant.wrongNameFormat;
-                } else if (calledBy === 'infoName') {
-                    this.newRFEDocument.get(['informationalCopy', inComingIndex, 'infoName']).setValue('');
-                    this.newRFEDocument.get(['informationalCopy', inComingIndex, 'infoPersonId']).setValue('');
-                    this.infoMsgIndex = inComingIndex;
-                    this.inforNameNotAvailable = true;
-                    this.inforNameNotAvailableMsg = AppConstant.wrongNameFormat;
                 }
             }
         }
@@ -3099,122 +3101,124 @@ export class NewRFEDocumentComponent implements OnInit, OnDestroy {
     getApproverDetailsByUserName(userNameEntered: string, inComingIndex: number) {
         this.userLastName = '';
         this.userFirstName = '';
-        if (userNameEntered.length > 0) {
-            let userName = userNameEntered.trim();
-            let noOfSpaces = userName.split(' ').length - 1;
-            if (noOfSpaces === 0 || noOfSpaces === 1) {
-                if (userName.indexOf(' ') < 0) {
-                    this.userLastName = userName;
+        if (userNameEntered !== null && userNameEntered !== undefined) {
+            if (userNameEntered.length > 0) {
+                let userName = userNameEntered.trim();
+                let noOfSpaces = userName.split(' ').length - 1;
+                if (noOfSpaces === 0 || noOfSpaces === 1) {
+                    if (userName.indexOf(' ') < 0) {
+                        this.userLastName = userName;
+                    } else {
+                        this.userLastName = userName.substr(0, userName.indexOf(' '));
+                        this.userFirstName = userName.substr(userName.indexOf(' ') + 1, userName.length - 1);
+                    }
+
+                    let user = new User();
+                    user.personId = '';
+                    user.personLastName = this.userLastName;
+                    user.personFirstName = this.userFirstName;
+                    user.userPin = '';
+                    this.busyLoading = this.datum.getGlobalUserForApprovar(user).subscribe((results: any[]) => {
+                        if (results) {
+                            results = results.map(result => {
+                                return {
+                                    personName: result.personFirstName + ' ' + result.personMiddleName + ' ' + result.personLastName,
+                                    userPin: result.userPin,
+                                    personId: result.personId,
+                                    personPhoneNum: result.personPhoneNum,
+                                    deptCode: result.deptCode,
+                                    deptName: result.deptName,
+
+                                    personFirstName: result.personFirstName,
+                                    personMiddleName: result.personMiddleName,
+                                    personLastName: result.personLastName,
+                                };
+                            });
+                            if (results.length === 0) {
+                                this.newRFEDocument.get(['approval', inComingIndex, 'approvalName']).setValue('');
+                                this.newRFEDocument.get(['approval', inComingIndex, 'personId']).setValue('');
+                                this.approvalPMsg = inComingIndex;
+                                this.approverNameNotAvailable = true;
+                                this.approverNameNotAvailableMsg = AppConstant.nameNotAvailableMsg;
+                            } else if (results.length === 1) {
+                                this.approverNameNotAvailable = false;
+                                this.index = inComingIndex;
+                                this.handleApproval(results[0]);
+                            } else if (results.length > 1) {
+                                this.newRFEDocument.get(['approval', inComingIndex, 'approvalName']).setValue('');
+                                this.newRFEDocument.get(['approval', inComingIndex, 'personId']).setValue('');
+                                this.approverNameNotAvailable = false;
+                                this.approvalNamePopup(inComingIndex);
+                            }
+                        } else {
+                            this.newRFEDocument.get(['approval', inComingIndex, 'approvalName']).setValue('');
+                            this.newRFEDocument.get(['approval', inComingIndex, 'personId']).setValue('');
+                            this.approvalPMsg = inComingIndex;
+                            this.approverNameNotAvailable = true;
+                            this.approverNameNotAvailableMsg = AppConstant.nameNotAvailableMsg;
+                        }
+                    });
+                } else if (noOfSpaces === 2) {
+                    let index = 0;
+                    let indexOfSpace = [];
+                    while ((index = userName.indexOf(' ', index + 1)) > 0) {
+                        indexOfSpace.push(index);
+                    }
+                    this.userFirstName = userName.substr(0, indexOfSpace[0]);
+                    this.userLastName = userName.substr(indexOfSpace[1] + 1, userName.length - 1);
+
+                    let user = new User();
+                    user.personId = '';
+                    user.personLastName = this.userLastName;
+                    user.personFirstName = this.userFirstName;
+                    user.userPin = '';
+                    this.busyLoading = this.datum.getGlobalUserForApprovar(user).subscribe((results: any[]) => {
+                        if (results) {
+                            results = results.map(result => {
+                                return {
+                                    personName: result.personFirstName + ' ' + result.personMiddleName + ' ' + result.personLastName,
+                                    userPin: result.userPin,
+                                    personId: result.personId,
+                                    personPhoneNum: result.personPhoneNum,
+                                    deptCode: result.deptCode,
+                                    deptName: result.deptName,
+
+                                    personFirstName: result.personFirstName,
+                                    personMiddleName: result.personMiddleName,
+                                    personLastName: result.personLastName,
+                                };
+                            });
+                            if (results.length === 0) {
+                                this.newRFEDocument.get(['approval', inComingIndex, 'approvalName']).setValue('');
+                                this.newRFEDocument.get(['approval', inComingIndex, 'personId']).setValue('');
+                                this.approvalPMsg = inComingIndex;
+                                this.approverNameNotAvailable = true;
+                                this.approverNameNotAvailableMsg = AppConstant.nameNotAvailableMsg;
+                            } else if (results.length === 1) {
+                                this.approverNameNotAvailable = false;
+                                this.index = inComingIndex;
+                                this.handleApproval(results[0]);
+                            } else if (results.length > 1) {
+                                this.newRFEDocument.get(['approval', inComingIndex, 'approvalName']).setValue('');
+                                this.newRFEDocument.get(['approval', inComingIndex, 'personId']).setValue('');
+                                this.approverNameNotAvailable = false;
+                                this.approvalNamePopup(inComingIndex);
+                            }
+                        } else {
+                            this.newRFEDocument.get(['approval', inComingIndex, 'approvalName']).setValue('');
+                            this.newRFEDocument.get(['approval', inComingIndex, 'personId']).setValue('');
+                            this.approvalPMsg = inComingIndex;
+                            this.approverNameNotAvailable = true;
+                            this.approverNameNotAvailableMsg = AppConstant.nameNotAvailableMsg;
+                        }
+                    });
                 } else {
-                    this.userLastName = userName.substr(0, userName.indexOf(' '));
-                    this.userFirstName = userName.substr(userName.indexOf(' ') + 1, userName.length - 1);
+                    this.newRFEDocument.get(['approval', inComingIndex, 'approvalName']).setValue('');
+                    this.newRFEDocument.get(['approval', inComingIndex, 'personId']).setValue('');
+                    this.approvalPMsg = inComingIndex;
+                    this.approverNameNotAvailable = true;
+                    this.approverNameNotAvailableMsg = AppConstant.wrongNameFormat;
                 }
-
-                let user = new User();
-                user.personId = '';
-                user.personLastName = this.userLastName;
-                user.personFirstName = this.userFirstName;
-                user.userPin = '';
-                this.busyLoading = this.datum.getGlobalUserForApprovar(user).subscribe((results: any[]) => {
-                    if (results) {
-                        results = results.map(result => {
-                            return {
-                                personName: result.personFirstName + ' ' + result.personMiddleName + ' ' + result.personLastName,
-                                userPin: result.userPin,
-                                personId: result.personId,
-                                personPhoneNum: result.personPhoneNum,
-                                deptCode: result.deptCode,
-                                deptName: result.deptName,
-
-                                personFirstName: result.personFirstName,
-                                personMiddleName: result.personMiddleName,
-                                personLastName: result.personLastName,
-                            };
-                        });
-                        if (results.length === 0) {
-                            this.newRFEDocument.get(['approval', inComingIndex, 'approvalName']).setValue('');
-                            this.newRFEDocument.get(['approval', inComingIndex, 'personId']).setValue('');
-                            this.approvalPMsg = inComingIndex;
-                            this.approverNameNotAvailable = true;
-                            this.approverNameNotAvailableMsg = AppConstant.nameNotAvailableMsg;
-                        } else if (results.length === 1) {
-                            this.approverNameNotAvailable = false;
-                            this.index = inComingIndex;
-                            this.handleApproval(results[0]);
-                        } else if (results.length > 1) {
-                            this.newRFEDocument.get(['approval', inComingIndex, 'approvalName']).setValue('');
-                            this.newRFEDocument.get(['approval', inComingIndex, 'personId']).setValue('');
-                            this.approverNameNotAvailable = false;
-                            this.approvalNamePopup(inComingIndex);
-                        }
-                    } else {
-                        this.newRFEDocument.get(['approval', inComingIndex, 'approvalName']).setValue('');
-                        this.newRFEDocument.get(['approval', inComingIndex, 'personId']).setValue('');
-                        this.approvalPMsg = inComingIndex;
-                        this.approverNameNotAvailable = true;
-                        this.approverNameNotAvailableMsg = AppConstant.nameNotAvailableMsg;
-                    }
-                });
-            } else if (noOfSpaces === 2) {
-                let index = 0;
-                let indexOfSpace = [];
-                while ((index = userName.indexOf(' ', index + 1)) > 0) {
-                    indexOfSpace.push(index);
-                }
-                this.userFirstName = userName.substr(0, indexOfSpace[0]);
-                this.userLastName = userName.substr(indexOfSpace[1] + 1, userName.length - 1);
-
-                let user = new User();
-                user.personId = '';
-                user.personLastName = this.userLastName;
-                user.personFirstName = this.userFirstName;
-                user.userPin = '';
-                this.busyLoading = this.datum.getGlobalUserForApprovar(user).subscribe((results: any[]) => {
-                    if (results) {
-                        results = results.map(result => {
-                            return {
-                                personName: result.personFirstName + ' ' + result.personMiddleName + ' ' + result.personLastName,
-                                userPin: result.userPin,
-                                personId: result.personId,
-                                personPhoneNum: result.personPhoneNum,
-                                deptCode: result.deptCode,
-                                deptName: result.deptName,
-
-                                personFirstName: result.personFirstName,
-                                personMiddleName: result.personMiddleName,
-                                personLastName: result.personLastName,
-                            };
-                        });
-                        if (results.length === 0) {
-                            this.newRFEDocument.get(['approval', inComingIndex, 'approvalName']).setValue('');
-                            this.newRFEDocument.get(['approval', inComingIndex, 'personId']).setValue('');
-                            this.approvalPMsg = inComingIndex;
-                            this.approverNameNotAvailable = true;
-                            this.approverNameNotAvailableMsg = AppConstant.nameNotAvailableMsg;
-                        } else if (results.length === 1) {
-                            this.approverNameNotAvailable = false;
-                            this.index = inComingIndex;
-                            this.handleApproval(results[0]);
-                        } else if (results.length > 1) {
-                            this.newRFEDocument.get(['approval', inComingIndex, 'approvalName']).setValue('');
-                            this.newRFEDocument.get(['approval', inComingIndex, 'personId']).setValue('');
-                            this.approverNameNotAvailable = false;
-                            this.approvalNamePopup(inComingIndex);
-                        }
-                    } else {
-                        this.newRFEDocument.get(['approval', inComingIndex, 'approvalName']).setValue('');
-                        this.newRFEDocument.get(['approval', inComingIndex, 'personId']).setValue('');
-                        this.approvalPMsg = inComingIndex;
-                        this.approverNameNotAvailable = true;
-                        this.approverNameNotAvailableMsg = AppConstant.nameNotAvailableMsg;
-                    }
-                });
-            } else {
-                this.newRFEDocument.get(['approval', inComingIndex, 'approvalName']).setValue('');
-                this.newRFEDocument.get(['approval', inComingIndex, 'personId']).setValue('');
-                this.approvalPMsg = inComingIndex;
-                this.approverNameNotAvailable = true;
-                this.approverNameNotAvailableMsg = AppConstant.wrongNameFormat;
             }
         }
     }
@@ -3225,32 +3229,34 @@ export class NewRFEDocumentComponent implements OnInit, OnDestroy {
      */
     getDetailsBySupplierName(supplierNameEntered: string) {
         this.userSupplierName = '';
-        if (supplierNameEntered.length > 0) {
-            let base = "";
-            this.userSupplierName = supplierNameEntered.trim();
-            this.busyLoading = this.datum.getProviderMaster(base, this.userSupplierName).subscribe((results: any[]) => {
-                if (results) {
-                    if (results.length === 0) {
+        if (supplierNameEntered !== null && supplierNameEntered !== undefined) {
+            if (supplierNameEntered.length > 0) {
+                let base = "";
+                this.userSupplierName = supplierNameEntered.trim();
+                this.busyLoading = this.datum.getProviderMaster(base, this.userSupplierName).subscribe((results: any[]) => {
+                    if (results) {
+                        if (results.length === 0) {
+                            this.newRFEDocument.controls['orderFrom'].setValue('');
+                            this.newRFEDocument.controls['supplierBase'].setValue('');
+                            this.supplierNameNotAvailable = true;
+                            this.supplierNameNotAvailableMsg = AppConstant.supplierNameNotAvailableMsg;
+                        } else if (results.length === 1) {
+                            this.supplierNameNotAvailable = false;
+                            this.handleOrder(results[0]);
+                        } else if (results.length > 1) {
+                            this.newRFEDocument.controls['orderFrom'].setValue('');
+                            this.newRFEDocument.controls['supplierBase'].setValue('');
+                            this.supplierNameNotAvailable = false;
+                            this.orderFromPopup();
+                        }
+                    } else {
                         this.newRFEDocument.controls['orderFrom'].setValue('');
                         this.newRFEDocument.controls['supplierBase'].setValue('');
                         this.supplierNameNotAvailable = true;
                         this.supplierNameNotAvailableMsg = AppConstant.supplierNameNotAvailableMsg;
-                    } else if (results.length === 1) {
-                        this.supplierNameNotAvailable = false;
-                        this.handleOrder(results[0]);
-                    } else if (results.length > 1) {
-                        this.newRFEDocument.controls['orderFrom'].setValue('');
-                        this.newRFEDocument.controls['supplierBase'].setValue('');
-                        this.supplierNameNotAvailable = false;
-                        this.orderFromPopup();
                     }
-                } else {
-                    this.newRFEDocument.controls['orderFrom'].setValue('');
-                    this.newRFEDocument.controls['supplierBase'].setValue('');
-                    this.supplierNameNotAvailable = true;
-                    this.supplierNameNotAvailableMsg = AppConstant.supplierNameNotAvailableMsg;
-                }
-            });
+                });
+            }
         }
     }
     noDataForSupplierName() {

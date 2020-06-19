@@ -436,6 +436,19 @@ export class EIDpopupComponent implements OnInit {
     this.orderForm.reset();
     this.approverForm.reset();
     this.ngOnInit();
+
+    if (this.commonFormDisplay) {
+      setTimeout(() => this.lastNameRef.nativeElement.focus());
+    }
+    if (this.orderFormDisplay) {
+      setTimeout(() => this.supplierNameRef.nativeElement.focus());
+    }
+    if (this.accFormDisplay) {
+      setTimeout(() => this.accountRef.nativeElement.focus());
+    }
+    if (this.deptFormDisplay) {
+      setTimeout(() => this.costCenterRef.nativeElement.focus());
+    }
   }
   /**onSubmit 
      * 

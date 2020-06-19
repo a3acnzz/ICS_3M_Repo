@@ -8,6 +8,7 @@ import { Subscription } from "rxjs";
 import * as moment from 'moment';
 import { AppConstant } from 'src/app/shared/constant/app.constant';
 import { User } from 'src/app/model/User';
+import { debounceTime } from 'rxjs/operators';
 @Component({
   selector: 'app-corp-ps-search',
   templateUrl: './corp-ps-search.component.html',
@@ -32,12 +33,16 @@ export class CorpPsSearchComponent implements OnInit, AfterViewInit {
   corpspsSearchList: CorpsSearch[] = [];
   alerts: any[];
   first: any = 0;
+
   userSupplierName: string = '';
-  userLastName: string = '';
-  userFirstName: string = '';
+  supplierButtonDisabled: boolean = false;
   supplierNameNotAvailable: boolean = false;
   supplierNameNotAvailableMsg: string = '';
   supplierTabOutPerformed: boolean = false;
+
+  userLastName: string = '';
+  userFirstName: string = '';
+  contactButtonDisabled: boolean = false;
   contactNameNotAvailable: boolean = false;
   contactTabOutPerformed: boolean = false;
 
@@ -91,6 +96,7 @@ export class CorpPsSearchComponent implements OnInit, AfterViewInit {
 
     this.rowOptions = [{ label: "10", value: 10 }, { label: "20", value: 20 }, { label: "50", value: 50 }, { label: "100", value: 100 }];
   }
+
   /** 
    * @description Enabling the popup for Supplier
    * 
@@ -107,30 +113,39 @@ export class CorpPsSearchComponent implements OnInit, AfterViewInit {
         this.userSupplierName = supplierNameEntered.trim() + '%';
       }
    */
-  getDetailsBySupplierName(supplierNameEntered: string) {
+  getDetailsBySupplierName(supplierNameEntered: string, calledBy: string) {
     this.supplierTabOutPerformed = true;
 
     this.userSupplierName = '';
-    if (supplierNameEntered.length > 0) {
-      let base = "";
-      this.userSupplierName = supplierNameEntered.trim();
-      this.busyLoading = this.reusableNewRfeService.getProviderMaster(base, this.userSupplierName).subscribe((results: any[]) => {
-        if (results) {
-          if (results.length === 0) {
+    if (supplierNameEntered !== null && supplierNameEntered !== undefined) {
+      if (supplierNameEntered.length > 0) {
+        let base = "";
+        this.userSupplierName = supplierNameEntered.trim();
+        this.busyLoading = this.reusableNewRfeService.getProviderMaster(base, this.userSupplierName).subscribe((results: any[]) => {
+          if (results) {
+            if (results.length === 0) {
+              this.supplierNameNotAvailable = true;
+              this.supplierNameNotAvailableMsg = AppConstant.supplierNameNotAvailableMsg;
+            } else if (results.length === 1) {
+              this.supplierNameNotAvailable = false;
+              this.handleOrder(results[0]);
+              if (calledBy === 'internal') {
+                this.searchCorps();
+              }
+            } else if (results.length > 1) {
+              this.supplierNameNotAvailable = false;
+              this.orderFromPopup();
+            }
+          } else {
             this.supplierNameNotAvailable = true;
             this.supplierNameNotAvailableMsg = AppConstant.supplierNameNotAvailableMsg;
-          } else if (results.length === 1) {
-            this.supplierNameNotAvailable = false;
-            this.handleOrder(results[0]);
-          } else if (results.length > 1) {
-            this.supplierNameNotAvailable = false;
-            this.orderFromPopup();
           }
-        } else {
-          this.supplierNameNotAvailable = true;
-          this.supplierNameNotAvailableMsg = AppConstant.supplierNameNotAvailableMsg;
-        }
-      });
+        });
+      } else if (calledBy === 'internal') {
+        this.searchCorps();
+      }
+    } else if (calledBy === 'internal') {
+      this.searchCorps();
     }
   }
   /**
@@ -140,9 +155,11 @@ export class CorpPsSearchComponent implements OnInit, AfterViewInit {
   handleOrder(event) {
     if (event != null && event != undefined) {
       this.searchForm.controls['supplier'].setValue(event.providerName);
+      this.supplierButtonDisabled = true;
     }
     else {
       this.searchForm.controls['supplier'].setValue('');
+      this.supplierButtonDisabled = false;
     }
     this.orderDisplay = false;
   }
@@ -162,24 +179,26 @@ export class CorpPsSearchComponent implements OnInit, AfterViewInit {
   contactPopupWithUpdatedNames(userNameEntered: string) {
     this.userLastName = '';
     this.userFirstName = '';
-    if (userNameEntered.length > 0) {
-      let userName = userNameEntered.trim();
-      let noOfSpaces = userName.split(' ').length - 1;
-      if (noOfSpaces === 0 || noOfSpaces === 1) {
-        if (userName.indexOf(' ') < 0) {
-          this.userLastName = userName;
-        } else {
-          this.userLastName = userName.substr(0, userName.indexOf(' '));
-          this.userFirstName = userName.substr(userName.indexOf(' ') + 1, userName.length - 1);
+    if (userNameEntered) {
+      if (userNameEntered.length > 0) {
+        let userName = userNameEntered.trim();
+        let noOfSpaces = userName.split(' ').length - 1;
+        if (noOfSpaces === 0 || noOfSpaces === 1) {
+          if (userName.indexOf(' ') < 0) {
+            this.userLastName = userName;
+          } else {
+            this.userLastName = userName.substr(0, userName.indexOf(' '));
+            this.userFirstName = userName.substr(userName.indexOf(' ') + 1, userName.length - 1);
+          }
+        } else if (noOfSpaces === 2) {
+          let index = 0;
+          let indexOfSpace = [];
+          while ((index = userName.indexOf(' ', index + 1)) > 0) {
+            indexOfSpace.push(index);
+          }
+          this.userFirstName = userName.substr(0, indexOfSpace[0]);
+          this.userLastName = userName.substr(indexOfSpace[1] + 1, userName.length - 1);
         }
-      } else if (noOfSpaces === 2) {
-        let index = 0;
-        let indexOfSpace = [];
-        while ((index = userName.indexOf(' ', index + 1)) > 0) {
-          indexOfSpace.push(index);
-        }
-        this.userFirstName = userName.substr(0, indexOfSpace[0]);
-        this.userLastName = userName.substr(indexOfSpace[1] + 1, userName.length - 1);
       }
     }
     this.contactDisplay = true;
@@ -188,100 +207,114 @@ export class CorpPsSearchComponent implements OnInit, AfterViewInit {
       * 
       * @param userNameEntered
       */
-  getDetailsByUserName(userNameEntered: string) {
+  getDetailsByUserName(userNameEntered: string, calledBy: string) {
+    this.contactTabOutPerformed = true;
+
     this.userLastName = '';
     this.userFirstName = '';
-    if (userNameEntered.length > 0) {
-      let userName = userNameEntered.trim();
-      let noOfSpaces = userName.split(' ').length - 1;
-      if (noOfSpaces === 0 || noOfSpaces === 1) {
-        if (userName.indexOf(' ') < 0) {
-          this.userLastName = userName;
+    if (userNameEntered !== null && userNameEntered !== undefined) {
+      if (userNameEntered.length > 0) {
+        let userName = userNameEntered.trim();
+        let noOfSpaces = userName.split(' ').length - 1;
+        if (noOfSpaces === 0 || noOfSpaces === 1) {
+          if (userName.indexOf(' ') < 0) {
+            this.userLastName = userName;
+          } else {
+            this.userLastName = userName.substr(0, userName.indexOf(' '));
+            this.userFirstName = userName.substr(userName.indexOf(' ') + 1, userName.length - 1);
+          }
+
+          let user = new User();
+          user.personId = '';
+          user.personLastName = this.userLastName;
+          user.personFirstName = this.userFirstName;
+          user.userPin = '';
+          this.busyLoading = this.reusableNewRfeService.getglobalUser(user).subscribe((results: any[]) => {
+            if (results) {
+              results = results.map(result => {
+                return {
+                  personName: result.personFirstName + ' ' + result.personMiddleName + ' ' + result.personLastName,
+                  userPin: result.userPin,
+                  personId: result.personId,
+                  personPhoneNum: result.personPhoneNum,
+                  deptCode: result.deptCode,
+                  deptName: result.deptName,
+
+                  personFirstName: result.personFirstName,
+                  personMiddleName: result.personMiddleName,
+                  personLastName: result.personLastName,
+                };
+              });
+              if (results.length === 0) {
+                this.contactNameNotAvailable = true;
+              } else if (results.length === 1) {
+                this.contactNameNotAvailable = false;
+                this.handleContact(results[0]);
+                if (calledBy === 'internal') {
+                  this.searchCorps();
+                }
+              } else if (results.length > 1) {
+                this.contactNameNotAvailable = false;
+                this.contactPopup();
+              }
+            } else {
+              this.contactNameNotAvailable = true;
+            }
+          });
+        } else if (noOfSpaces === 2) {
+          let index = 0;
+          let indexOfSpace = [];
+          while ((index = userName.indexOf(' ', index + 1)) > 0) {
+            indexOfSpace.push(index);
+          }
+          this.userFirstName = userName.substr(0, indexOfSpace[0]);
+          this.userLastName = userName.substr(indexOfSpace[1] + 1, userName.length - 1);
+
+          let user = new User();
+          user.personId = '';
+          user.personLastName = this.userLastName;
+          user.personFirstName = this.userFirstName;
+          user.userPin = '';
+          this.busyLoading = this.reusableNewRfeService.getglobalUser(user).subscribe((results: any[]) => {
+            if (results) {
+              results = results.map(result => {
+                return {
+                  personName: result.personFirstName + ' ' + result.personMiddleName + ' ' + result.personLastName,
+                  userPin: result.userPin,
+                  personId: result.personId,
+                  personPhoneNum: result.personPhoneNum,
+                  deptCode: result.deptCode,
+                  deptName: result.deptName,
+
+                  personFirstName: result.personFirstName,
+                  personMiddleName: result.personMiddleName,
+                  personLastName: result.personLastName,
+                };
+              });
+              if (results.length === 0) {
+                this.contactNameNotAvailable = true;
+              } else if (results.length === 1) {
+                this.contactNameNotAvailable = false;
+                this.handleContact(results[0]);
+                if (calledBy === 'internal') {
+                  this.searchCorps();
+                }
+              } else if (results.length > 1) {
+                this.contactNameNotAvailable = false;
+                this.contactPopup();
+              }
+            } else {
+              this.contactNameNotAvailable = true;
+            }
+          });
         } else {
-          this.userLastName = userName.substr(0, userName.indexOf(' '));
-          this.userFirstName = userName.substr(userName.indexOf(' ') + 1, userName.length - 1);
+          this.contactNameNotAvailable = true;
         }
-
-        let user = new User();
-        user.personId = '';
-        user.personLastName = this.userLastName;
-        user.personFirstName = this.userFirstName;
-        user.userPin = '';
-        this.busyLoading = this.reusableNewRfeService.getglobalUser(user).subscribe((results: any[]) => {
-          if (results) {
-            results = results.map(result => {
-              return {
-                personName: result.personFirstName + ' ' + result.personMiddleName + ' ' + result.personLastName,
-                userPin: result.userPin,
-                personId: result.personId,
-                personPhoneNum: result.personPhoneNum,
-                deptCode: result.deptCode,
-                deptName: result.deptName,
-
-                personFirstName: result.personFirstName,
-                personMiddleName: result.personMiddleName,
-                personLastName: result.personLastName,
-              };
-            });
-            if (results.length === 0) {
-              this.contactNameNotAvailable = true;
-            } else if (results.length === 1) {
-              this.contactNameNotAvailable = false;
-              this.handleContact(results[0]);
-            } else if (results.length > 1) {
-              this.contactNameNotAvailable = false;
-              this.contactPopup();
-            }
-          } else {
-            this.contactNameNotAvailable = true;
-          }
-        });
-      } else if (noOfSpaces === 2) {
-        let index = 0;
-        let indexOfSpace = [];
-        while ((index = userName.indexOf(' ', index + 1)) > 0) {
-          indexOfSpace.push(index);
-        }
-        this.userFirstName = userName.substr(0, indexOfSpace[0]);
-        this.userLastName = userName.substr(indexOfSpace[1] + 1, userName.length - 1);
-
-        let user = new User();
-        user.personId = '';
-        user.personLastName = this.userLastName;
-        user.personFirstName = this.userFirstName;
-        user.userPin = '';
-        this.busyLoading = this.reusableNewRfeService.getglobalUser(user).subscribe((results: any[]) => {
-          if (results) {
-            results = results.map(result => {
-              return {
-                personName: result.personFirstName + ' ' + result.personMiddleName + ' ' + result.personLastName,
-                userPin: result.userPin,
-                personId: result.personId,
-                personPhoneNum: result.personPhoneNum,
-                deptCode: result.deptCode,
-                deptName: result.deptName,
-
-                personFirstName: result.personFirstName,
-                personMiddleName: result.personMiddleName,
-                personLastName: result.personLastName,
-              };
-            });
-            if (results.length === 0) {
-              this.contactNameNotAvailable = true;
-            } else if (results.length === 1) {
-              this.contactNameNotAvailable = false;
-              this.handleContact(results[0]);
-            } else if (results.length > 1) {
-              this.contactNameNotAvailable = false;
-              this.contactPopup();
-            }
-          } else {
-            this.contactNameNotAvailable = true;
-          }
-        });
-      } else {
-        this.contactNameNotAvailable = true;
+      } else if (calledBy === 'internal') {
+        this.searchCorps();
       }
+    } else if (calledBy === 'internal') {
+      this.searchCorps();
     }
   }
 
@@ -292,9 +325,11 @@ export class CorpPsSearchComponent implements OnInit, AfterViewInit {
   handleContact(event) {
     if (event != null && event != undefined) {
       this.searchForm.controls['contact'].setValue(event.personName);
+      this.contactButtonDisabled = true;
     }
     else {
       this.searchForm.controls['contact'].setValue('');
+      this.contactButtonDisabled = false;
     }
     this.contactDisplay = false;
   }
@@ -308,17 +343,16 @@ export class CorpPsSearchComponent implements OnInit, AfterViewInit {
    *  @description Search by given form values
    */
   searchCorps() {
-    this.contactNameNotAvailable = false;
-    this.supplierNameNotAvailable = false;
+    if (this.supplierTabOutPerformed && this.contactTabOutPerformed) {
+      this.contactNameNotAvailable = false;
+      this.supplierNameNotAvailable = false;
 
-    if (this.supplierTabOutPerformed) {
       this.first = 0;
       let corpSearch = new CorpsSearch();
       if (this.searchForm.get("status").value === "viewAll")
         corpSearch.status = "";
-      else
-        if (this.searchForm.get("status").value != null && this.searchForm.get("status").value != undefined)
-          corpSearch.status = this.searchForm.get("status").value.trim();
+      else if (this.searchForm.get("status").value != null && this.searchForm.get("status").value != undefined)
+        corpSearch.status = this.searchForm.get("status").value.trim();
       corpSearch.supplier = this.searchForm.get("supplier").value;
       if (this.searchForm.get("contact").value != null && this.searchForm.get("contact").value != undefined)
         corpSearch.contactName = this.searchForm.get("contact").value.trim();
@@ -368,8 +402,12 @@ export class CorpPsSearchComponent implements OnInit, AfterViewInit {
           }
         });
     } else {
-      this.getDetailsBySupplierName(this.searchForm.get('supplier').value);
-      // this.searchCorps();
+      if (!this.supplierTabOutPerformed) {
+        this.getDetailsBySupplierName(this.searchForm.get('supplier').value, 'internal');
+      }
+      if (!this.contactTabOutPerformed) {
+        this.getDetailsByUserName(this.searchForm.get('contact').value, 'internal');
+      }
     }
   }
 
@@ -381,6 +419,9 @@ export class CorpPsSearchComponent implements OnInit, AfterViewInit {
     this.noValue = false;
     this.contactNameNotAvailable = false;
     this.supplierNameNotAvailable = false;
+    this.supplierButtonDisabled = false;
+    this.contactButtonDisabled = false;
+
     this.searchForm.reset();
     this.corpspsSearchList = [];
     this.searchForm.controls['sortByType'].setValue(1);
