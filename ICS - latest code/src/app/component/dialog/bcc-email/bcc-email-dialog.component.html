@@ -1,0 +1,54 @@
+<div [ngBusy]="busyLoading"></div>
+<div [ngBusy]="busySave"></div>
+<div mat-dialog-title>
+  <div class="d-flex justify-content-between">
+    <div class="p-2" id="dialogTitle">BCC Emails - {{locationName}} {{programName}}</div>
+    <i class="fa fa-close p-2" (click)="this.dialogRef.close()" id="closeDialog"></i>
+  </div>
+</div>
+<div class="d-flex flex-row">
+  <div class="p-2 flex-fill">
+    <alert *ngFor="let alert of alerts;let i = index" [type]="alert.type" id="alertMessage">
+      {{ alert?.msg }}
+    </alert>
+    <alert type='danger' *ngIf="hasDuplicateEmails && submitted" id="duplicatesError">
+      Duplicate emails
+    </alert>
+  </div>
+</div>
+<form novalidate #bccEmailForm="ngForm" (ngSubmit)="saveBccEmailList(bccEmailForm)">
+  <mat-dialog-content style="min-width: calc(50vw); max-height: calc(50vh);">
+    <div class="d-flex flex-row" *ngFor="let address of bccEmailList let i = index;">
+      <div class="p-2 flex-fill">
+        <div class="form-group">
+          <div class="input-group">
+            <input class="form-control" type="email" email="true" id="email{{i}}" name="email{{i}}"
+                   [(ngModel)]="address.email" #email="ngModel" required>
+            <span class="input-group-btn">
+                <button class="btn btn-danger" type="button" (click)="removeBccEmail(i)">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </span>
+          </div>
+        </div>
+        <alert type='danger' *ngIf="email.errors?.required && submitted" id="emailRequiredError">
+          Email is required
+        </alert>
+        <alert type='danger' *ngIf="!email.valid && submitted" id="emailFormatError">
+          Input must be a valid email address
+        </alert>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <div class="d-flex flex-row">
+      <div class="p-2">
+        <button class="btn btn-primary" type="submit">
+          <i class="fa fa-save fa-fw"></i>
+          Save
+        </button>
+        <button class="btn btn-secondary" type="button" (click)="addBccEmail()">Add Email</button>
+      </div>
+    </div>
+  </mat-dialog-actions>
+</form>

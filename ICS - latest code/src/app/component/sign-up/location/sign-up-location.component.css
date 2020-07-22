@@ -1,0 +1,20 @@
+.table-header {
+  margin-bottom: .5rem;
+  margin-top: .5rem;
+}
+
+.appointment-title {
+  margin-bottom: 0;
+  padding-left: 0 !important;
+}
+#recurcal span.ui-state-default.ui-state-disabled.ng-tns-c8-5.ng-star-inserted{
+  color:white;
+  background-color: darkgreen;
+  border: 1px solid darkgreen;
+
+}
+body #recurcal .ui-datepicker table td > a, body #recurcal .ui-datepicker table td > span{
+  color:white !important;
+  background-color: darkgreen !important;
+  
+}

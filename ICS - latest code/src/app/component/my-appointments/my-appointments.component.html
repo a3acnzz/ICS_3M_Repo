@@ -1,0 +1,67 @@
+<h4>My Appointments</h4>
+<hr/>
+<alert type='primary' *ngIf="systemAnnouncement.length > 0" id="systemAnnouncement">
+    {{systemAnnouncement}}
+</alert>
+<alert *ngFor="let alert of alerts;let i = index" [type]="alert.type" [id]="alert.id" dismissible="true">
+    {{ alert?.msg }}
+</alert>
+<div [ngBusy]="busyLoading"></div>
+<div [ngBusy]="busySave"></div>
+<div class="row">
+    <div class="col">
+        <div *ngIf="appointmentList?.length > 0">
+            <div class="row table-header">
+                <div class="input-group input-group-sm col">
+                    <div class="input-group-prepend">
+                        <i class="input-group-text fa fa-filter"></i>
+                    </div>
+                    <input (input)="dt.filterGlobal($event.target.value, 'contains')" class="form-control form-control-sm d-flex" id="appointmentFilterString" placeholder="Filter" aria-label="Filter appointments">
+                </div>
+            </div>
+            <p-table #dt [value]="appointmentList" [globalFilterFields]="['programName', 'programDate', 'startTimeDisplay', 'endTimeDisplay', 'firstName', 'lastName', 'createdByFirstName', 'createdByLastName']" [paginator]="appointmentList?.length > rowsPerPage"
+                [rows]="rowsPerPage" [rowsPerPageOptions]="rowsPerPageOptions" [responsive]="true" [autoLayout]="true" sortField="programDate" [sortOrder]="-1" styleClass="MMM-prime-table">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th [pSortableColumn]="'programName'">Program Name
+                            <p-sortIcon [field]="'programName'"></p-sortIcon>
+                        </th>
+                        <th [pSortableColumn]="'programDate'">Date
+                            <p-sortIcon [field]="'programDate'"></p-sortIcon>
+                        </th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Venue</th>
+                        <th>Booked for</th>
+                        <th>Booked by</th>
+                        <th>Actions</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-appointment let-rowIndex="rowIndex">
+                    <tr>
+                        <td id="appointment-{{rowIndex}}-programName">{{appointment.programName}}</td>
+                        <td id="appointment-{{rowIndex}}-programDate">{{appointment.programDateDisplay | date:'fullDate'}}</td>
+                        <td id="appointment-{{rowIndex}}-startTime">{{appointment.startTimeDisplay}}</td>
+                        <td id="appointment-{{rowIndex}}-endTime">{{appointment.endTimeDisplay}}</td>
+                        <td id="appointment-{{rowIndex}}-venue">{{appointment.venue}}</td>
+                        <td id="appointment-{{rowIndex}}-name">{{appointment.firstName}} {{appointment.lastName}}</td>
+                        <td id="appointment-{{rowIndex}}-createdByName">{{appointment.createdByFirstName}} {{appointment.createdByLastName}}</td>
+                        <td>
+                            <div *ngIf="canChangeAppointment(appointment)">
+                                <button [hidden]="appointment.recursive_App" type="button" class="btn btn-primary btn-sm btn-block" id="reschedule-appointment-{{rowIndex}}" (click)="reschedule(appointment.programId, appointment.timeSlotId, appointment.programDateId, appointment.id, rowIndex)">
+                  Reschedule
+                </button>
+                                <button type="button" class="btn btn-danger btn-sm btn-block" id="cancel-appointment-{{rowIndex}}" (click)="cancel(appointment.id, rowIndex,appointment.programId,appointment.recursive_App)">
+                  Cancel
+                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+        <alert type="primary" *ngIf="appointmentList?.length < 1" id="noAppointmentsAlert">
+            You do not have any upcoming appointments.
+        </alert>
+    </div>
+</div>

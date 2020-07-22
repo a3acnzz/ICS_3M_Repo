@@ -1,0 +1,44 @@
+<div [ngBusy]="busyLoading"></div>
+<div mat-dialog-title>
+    <div class="d-flex justify-content-between">
+        <div class="p-2">Select a Program</div>
+        <i class="fa fa-close p-2" (click)="this.dialogRef.close()"></i>
+    </div>
+</div>
+<mat-dialog-content style="min-width: 60vw;">
+    <alert *ngFor="let alert of alerts;let i = index" [type]="alert.type" [id]="alert.id">
+        {{ alert?.msg }}
+    </alert>
+    <div class="row">
+        <div class="col">
+            <div class="list-group">
+                <button type="button" [ngClass]="program.recursiveApp == true ? 'test': 'greyedOut'" class="list-group-item list-group-item-action" *ngFor="let program of programs;" (click)="submit(program)">
+          <div class="row" *ngIf="!program.recursiveApp">
+            <div class="col-6" >
+              <strong>{{program.name}}</strong>
+              <br>
+              <em><small>{{program.venue}}</small></em>
+            </div>
+            <div class="col-6" *ngIf="!program.recursiveApp">
+              Min Appointments Per User: {{program.minAppointmentsPerUser}}
+              <br>
+              Max Appointments Per User: {{program.maxAppointmentsPerUser}}
+            </div>
+          </div>
+          <div class="row"  *ngIf="program.recursiveApp">
+            <div class="col-6">
+                <strong>{{program.name}}  (**Recursive) </strong>
+                <br>
+                <em><small>{{program.venue}}</small></em>
+              </div>
+            <div class="col-6"  style="color:#007ad9;">
+                Min Appointments Per User: {{program.minAppointmentsPerUser}}
+                <br>
+                Max Appointments Per User: {{program.maxAppointmentsPerUser}}
+              </div>
+        </div>
+        </button>
+            </div>
+        </div>
+    </div>
+</mat-dialog-content>

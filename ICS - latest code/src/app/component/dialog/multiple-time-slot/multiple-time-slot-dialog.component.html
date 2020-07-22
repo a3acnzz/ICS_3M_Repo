@@ -1,0 +1,96 @@
+<div mat-dialog-title>
+    <div class="d-flex justify-content-between">
+        <div [hidden]="recursiveMultiple" class="p-2">Create Multiple Time Slots for {{programDate}}</div>
+        <div [hidden]="!recursiveMultiple" class="p-2">Create Multiple Time Slots for Recursive Appointments</div>
+        <i class="fa fa-close p-2" id="close" (click)="this.dialogRef.close()"></i>
+    </div>
+</div>
+<form #timeSlotForm="ngForm" (ngSubmit)="submit(timeSlotForm)">
+    <mat-dialog-content>
+        <div class="d-flex flex-column flex-md-row">
+            <div class="p-2">
+                <div class="form-group">
+                    <label class="col-form-label">Start Time</label><label class="requiredSymbol">*</label>
+                    <!--We can eventually use a "time" input after IE is no longer a supported browser at 3M-->
+                    <!--<input class="form-control" id="startTime" name="startTime" type="time" [(ngModel)]="startTime" required>-->
+                    <!--<alert type='danger' *ngIf="startTime.errors?.required && startTime.touched" id="startTimeRequiredError">-->
+                    <!--Start Time is required-->
+                    <!--</alert>-->
+                    <timepicker id="startDateTime" name="startDateTime" [(ngModel)]="startDateTime" #startTime="ngModel" [minuteStep]=1 [showSpinners]=false required></timepicker>
+                    <alert type='danger' *ngIf="startTime.errors && submitted" id="startTimeRequiredError">
+                        Start Time must be a valid time
+                    </alert>
+                    <alert type='danger' *ngIf="spacetimeContinuumViolated && submitted" id="startTimeError">
+                        Spacetime continuum violation: start time is greater than end time
+                    </alert>
+                </div>
+            </div>
+            <div class="p-2">
+                <div class="form-group">
+                    <label class="col-form-label">End Time</label><label class="requiredSymbol">*</label>
+                    <!--We can eventually use a "time" input after IE is no longer a supported browser at 3M-->
+                    <!--<input class="form-control" id="endTime" name="endTime" type="time" [(ngModel)]="endTime" required>-->
+                    <!--<alert type='danger' *ngIf="endTime.errors?.required && endTime.touched" id="endTimeRequiredError">-->
+                    <!--End Time is required-->
+                    <!--</alert>-->
+                    <timepicker id="endDateTime" name="endDateTime" [(ngModel)]="endDateTime" #endTime="ngModel" [minuteStep]=1 [showSpinners]=false required></timepicker>
+                    <alert type='danger' *ngIf="endTime.errors && submitted" id="endTimeRequiredError">
+                        End Time must be a valid time
+                    </alert>
+                    <alert type='danger' *ngIf="spacetimeContinuumViolated && submitted" id="endTimeError">
+                        Spacetime continuum violation: end time is less than than start time
+                    </alert>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex flex-column flex-md-row">
+            <div class="p-2">
+                <div class="form-group">
+                    <label for="slotHours" class="col-form-label">Time Slot Hours</label><label class="requiredSymbol">*</label>
+                    <input class="form-control" type="number" id="slotHours" name="slotHours" [(ngModel)]="slotHours" #slotHoursCtrl="ngModel" required>
+                    <alert type='danger' *ngIf="(slotHoursCtrl.errors?.required || !slotHoursMinutesValid) && submitted" id="slotHoursRequiredError">
+                        Time Slot Hours is required
+                    </alert>
+                    <alert type='danger' *ngIf="!slotHoursValid && submitted" id="slotHoursInvalidError">
+                        Must be between {{slotHoursMin}} - {{slotHoursMax}}
+                    </alert>
+                </div>
+            </div>
+            <div class="p-2">
+                <div class="form-group">{{slotMinutesCtrl.errors?.required}}
+                    <label for="slotMinutes" class="col-form-label">Time Slot Minutes</label><label class="requiredSymbol">*</label>
+                    <input class="form-control" type="number" id="slotMinutes" name="slotMinutes" [(ngModel)]="slotMinutes" #slotMinutesCtrl="ngModel" required>
+                    <alert type='danger' *ngIf="(slotMinutesCtrl.errors?.required || !slotHoursMinutesValid) && submitted" id="slotMinutesRequiredError">
+                        Time Slot Minutes is required
+                    </alert>
+                    <alert type='danger' *ngIf="!slotMinutesValid && submitted" id="slotMinutesInvalidError">
+                        Must be between {{slotMinutesMin}} - {{slotMinutesMax}}
+                    </alert>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex flex-column flex-md-row">
+            <div class="p-2">
+                <div class="form-group">
+                    <label class="col-form-label">Max Appointments</label><label class="requiredSymbol">*</label>
+                    <input class="form-control" type="number" id="maxAppointments" name="maxAppointments" [(ngModel)]="maxAppointments" #maxAppointmentsCtrl="ngModel" required>
+                    <alert type='danger' *ngIf="maxAppointmentsCtrl.errors?.required && submitted" id="maxAppointmentsRequiredError">
+                        Max Appointments is required
+                    </alert>
+                    <alert type='danger' *ngIf="!maxAppointmentsCtrl.errors?.required && !maxAppointmentsValid && submitted" id="minMaxAppointmentsRequiredError">
+                        Timeslot capacity must be greater than zero
+                    </alert>
+                    <alert type='danger' *ngIf="!maxAppointmentsCtrl.errors?.required && maxAppointmentsValid && !maxAppointmentsAndMinAppPerUserValid && submitted" id="minAppointmentsPerUserError">
+                        Timeslot capacity must be greater than or equal to "Minimum Appointments Per User" field
+                    </alert>
+                    <alert type='danger' *ngIf="!maxAppointmentsCtrl.errors?.required && maxAppointmentsValid && !maxAppointmentsAndMaxAppPerUserValid && submitted" id="maxAppointmentsPerUserError">
+                        Timeslot capacity must be greater than or equal to "Maximum Appointments Per User" field
+                    </alert>
+                </div>
+            </div>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button class="btn btn-primary" type="submit" id="singleTimeslotSubmitButton">Create Time Slots</button>
+    </mat-dialog-actions>
+</form>
