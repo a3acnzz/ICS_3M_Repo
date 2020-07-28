@@ -1,0 +1,210 @@
+---
+grails:
+    profile: rest-api
+    codegen:
+        defaultPackage: com.mmm
+    spring:
+        transactionManagement:
+            proxies: false
+    gorm:
+        # Whether to autowire entities.
+        # Disabled by default for performance reasons.
+        autowire: false
+        reactor:
+            # Whether to translate GORM events into Reactor events
+            # Disabled by default for performance reasons
+            events: false
+info:
+    app:
+        name: '@info.app.code@'
+        version: '@info.app.version@'
+        grailsVersion: '@info.app.grailsVersion@'
+spring:
+    main:
+        banner-mode: "off"
+    groovy:
+        template:
+            check-template-location: false
+
+# Spring Actuator Endpoints are Disabled by Default
+endpoints:
+    enabled: false
+    jmx:
+        enabled: true
+
+---
+grails:
+    mime:
+        disable:
+            accept:
+                header:
+                    userAgents:
+                        - Gecko
+                        - WebKit
+                        - Presto
+                        - Trident
+        types:
+            json:
+              - application/json
+              - text/json
+            hal:
+              - application/hal+json
+              - application/hal+xml
+            xml:
+              - text/xml
+              - application/xml
+            atom: application/atom+xml
+            css: text/css
+            csv: text/csv
+            js: text/javascript
+            rss: application/rss+xml
+            text: text/plain
+            all: '*/*'
+    urlmapping:
+        cache:
+            maxsize: 1000
+    controllers:
+        defaultScope: singleton
+    converters:
+        encoding: UTF-8
+
+---
+hibernate:
+    cache:
+        queries: false
+        use_second_level_cache: true
+        use_query_cache: false
+        region.factory_class: org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory
+
+#dataSource:
+#    pooled: true
+#    jmxExport: true
+#    driverClassName: org.h2.Driver
+#    username: sa
+#    password:
+
+dataSources:
+  dataSource:
+    pooled: true
+    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    dialect : org.hibernate.dialect.SQLServer2012Dialect
+  eid:
+    pooled: true
+    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    dialect : org.hibernate.dialect.SQLServer2012Dialect
+
+
+environments:
+    development:
+      dataSources:
+        dataSource:
+            dbCreate: none
+            
+#            username: ics
+#            password: 'iBR9td1DBN101kBbJDTY'
+#            logSql: true
+#            url: jdbc:sqlserver://DEVSQL56A\\SQL56A:3041;databaseName=MIS_ICS_DEV;sendTimeAsDatetime=false
+            
+            username: icsuser
+            password: Root123
+            logSql: true
+            url: jdbc:sqlserver://localhost:1433;databaseName=ics_dev;sendTimeAsDatetime=false; 
+            
+#            username: eRFEAdmin
+#            password: 'E3v#LyQp.!nAAnU'
+#            logSql: true
+#            url: jdbc:sqlserver://devsql55a.usac.mmm.com:1930;databaseName=eRFE_Dev;sendTimeAsDatetime=false;
+        eid:
+            dbCreate: none
+            
+#            username: USF832160ICS
+#            password: 'qsyfj2cjbk3O3l3QUqVm'
+#            logSql: true
+#            url: jdbc:sqlserver://DEVSQL29:1931;databaseName=DEID001;sendTimeAsDatetime=false
+
+            username: icsuser
+            password: Root123
+            logSql: true
+            url: jdbc:sqlserver://localhost:1433;databaseName=ics_dev;sendTimeAsDatetime=false;
+            
+#            username: eRFEAdmin
+#            password: 'E3v#LyQp.!nAAnU'
+#            logSql: true
+#            url: jdbc:sqlserver://devsql55a.usac.mmm.com:1930;databaseName=eRFE_Dev;sendTimeAsDatetime=false;
+    test:
+        dataSource:
+            dbCreate: none
+            username: ics
+            password: '!RRgK7QbCM8EIG@9Tu&D'
+            logSql: true
+            url: jdbc:sqlserver://QASQL91:1124;databaseName=MIS_ICS_QA;sendTimeAsDatetime=false
+    production:
+        dataSources:
+          dataSource:
+              dbCreate: none
+              username: '${ICS_DATASOURCE_USERNAME}'
+              password: '${ICS_DATASOURCE_PASSWORD}'
+              url: '${ICS_DATASOURCE_URL}'
+              properties:
+                  jmxEnabled: true
+                  initialSize: 10
+                  maxActive: 100
+                  minIdle: 10
+                  maxIdle: 50
+                  maxWait: 10000
+                  maxAge: 14400
+                  timeBetweenEvictionRunsMillis: 5000
+                  minEvictableIdleTimeMillis: 30000
+                  validationQuery: SELECT 1
+                  validationQueryTimeout: 3
+                  validationInterval: 15000
+                  testOnBorrow: true
+                  testWhileIdle: true
+                  testOnReturn: false
+                  jdbcInterceptors: ConnectionState
+                  defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
+          eid:
+            dbCreate: none
+            username: '${ICS_EID_DATASOURCE_USERNAME}'
+            password: '${ICS_EID_DATASOURCE_PASSWORD}'
+            url: '${ICS_EID_DATASOURCE_URL}'
+            properties:
+              jmxEnabled: true
+              initialSize: 10
+              maxActive: 100
+              minIdle: 10
+              maxIdle: 50
+              maxWait: 10000
+              maxAge: 14400
+              timeBetweenEvictionRunsMillis: 5000
+              minEvictableIdleTimeMillis: 60000
+              validationQuery: SELECT 1
+              validationQueryTimeout: 3
+              validationInterval: 15000
+              testOnBorrow: true
+              testWhileIdle: true
+              testOnReturn: false
+              jdbcInterceptors: ConnectionState
+              defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
+---
+grails:
+  cors:
+    enabled: true
+    allowedHeader: ["Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"]
+    allowedMethods: [GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS]
+    maxAge: 3600
+    allowedOrigins: "*"
+
+environments:
+    development:
+      server:
+        contextPath: '/ics-app/'
+      grails:
+        cors:
+          allowedOrigins: ['*']
+    production:
+      server:
+        contextPath: '/ics-app/'
+      grails:
+        cors:
+          allowedOrigins: ['https://ics-dev.os.mmm.com','https://ics-dev.os.mmm.com/ics-app/','https://ics-dev.mmm.com','https://ics-qa.mmm.com','https://ics-stage.mmm.com','https://ics.mmm.com']
