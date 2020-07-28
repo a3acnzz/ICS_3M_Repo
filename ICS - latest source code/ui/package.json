@@ -36,7 +36,7 @@
     "hammerjs": "^2.0.8",
     "immutable": "^3.8.2",
     "jquery": "^3.4.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "ng-busy": "^8.0.0",
     "ngx-bootstrap": "^5.1.0",
     "ngx-cookie": "^4.1.2",
