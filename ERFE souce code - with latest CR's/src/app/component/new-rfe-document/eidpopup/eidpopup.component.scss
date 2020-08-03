@@ -1,0 +1,17 @@
+:host ::ng-deep .ui-table-customers {
+    .ui-paginator {
+        .ui-dropdown {
+            float: right;
+            margin-right: 40px;
+            width: 100px;
+            height: auto;
+        }
+        .ui-dropdown-trigger {
+            background-color: #007ad9;
+            color: black;
+        }
+        .ui-dropdown-label {
+            background-color: #d0fefe;
+        }
+    }
+}
