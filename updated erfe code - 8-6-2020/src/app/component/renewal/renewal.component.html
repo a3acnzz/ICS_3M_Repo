@@ -1,0 +1,193 @@
+<div class="row d-flex">
+    <div [ngBusy]="[busyLoading]"></div>
+    <div class="ui-g pt-3 pb-3">
+        <div class="ui-g-1"></div>
+        <div class="ui-g-10">
+            <h2>My Renewals</h2>
+            <div class="ui-g-12 shadow" style="border-width: 2px; border-style:solid ; border-color: #3366ff;">
+                <form [formGroup]="renewalForm">
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-4 ui-g-nopad">
+                            <div class="ui-g-12 ui-label pb-0">
+                                <h6>RFE No.</h6>
+                            </div>
+                            <div class="ui-g-12">
+                                <input class="form-control text-center" type="text" pInputText formControlName="rfeNo">
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-md-4 ui-g-nopad">
+                            <div class="ui-g-12 ui-label pb-0">
+                                <h6>Supplier Number:</h6>
+                            </div>
+                            <div class="ui-g-12">
+                                <input class="form-control text-center" type="text" pInputText formControlName="supplierNumber">
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-md-4 ui-g-nopad">
+                            <div class="ui-g-12 ui-label pb-0">
+                                <h6>Supplier Name:</h6>
+                            </div>
+                            <div class="ui-g-12">
+                                <input class="form-control text-center" type="text" pInputText formControlName="supplierName">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-4 ui-g-nopad">
+                            <div class="ui-g-12 ui-label pb-0">
+                                <h6>Start Date:</h6>
+                            </div>
+                            <div class="ui-g-12">
+                                <input class="form-control text-center" type="text" size="40" pInputText formControlName="startDate">
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-md-4 ui-g-nopad">
+                            <div class="ui-g-12 ui-label pb-0">
+                                <h6>Completion Date:</h6>
+                            </div>
+                            <div class="ui-g-12">
+                                <input class="form-control text-center" type="text" size="40" pInputText formControlName="completionDate">
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-md-4 ui-g-nopad">
+                            <div class="ui-g-12 ui-label pb-0">
+                                <h6>Additional Expenses:</h6>
+                            </div>
+                            <div class="ui-g-12">
+                                <input class="form-control text-center" type="text" size="40" pInputText formControlName="additionalExp">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-4 ui-g-nopad">
+                            <div class="ui-g-12 ui-label pb-0">
+                                <h6>Approval Amount:</h6>
+                            </div>
+                            <div class="ui-g-12">
+                                <input class="form-control text-center" type="text" size="40" pInputText formControlName="approvalAmt">
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-md-4 ui-g-nopad">
+                            <div class="ui-g-12 ui-label pb-0">
+                                <h6> Hourly:</h6>
+                            </div>
+                            <div class="ui-g-12">
+                                <input class="form-control text-center" type="text" size="40" pInputText formControlName="hourly">
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-md-4 ui-g-nopad">
+                            <div class="ui-g-12 ui-label pb-0">
+                                <h6> Fixed:</h6>
+                            </div>
+                            <div class="ui-g-12">
+                                <input class="form-control text-center" type="text" size="40" pInputText formControlName="fixed">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ui-g">
+                        <div class="ui-g-6 ui-md-6 ui-g-nopad">
+                            <div class="ui-g-12 ui-label pb-0">
+                                <h6>Project Title:</h6>
+                            </div>
+                            <div class="ui-g-12">
+                                <textarea class="form-control" autoResize="autoResize" formControlName="projectTitle" rows="4" type="text" pInputTextarea></textarea>
+                            </div>
+                        </div>
+                        <div class="ui-g-6 ui-md-6 ui-g-nopad">
+                            <div class="ui-g-12 ui-label pb-0">
+                                <h6>Project Description:</h6>
+                            </div>
+                            <div class="ui-g-12">
+                                <textarea class="form-control" autoResize="autoResize" formControlName="description" rows="4" type="text" pInputTextarea></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-label pb-0" style="color:royalblue;font-weight: bold;">
+                        Contact Information:
+                    </div>
+                    <h5 class="h4"></h5>
+                    <div class="ui-g-12 ui-md-6 ui-lg-4">
+                        <h6>Site Contact Person Id:</h6>
+                        <div class="ui-g-12 form-control text-center">{{siteContactPersonId}}</div>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-4">
+                        <h6>Project Coordinator Person Id:</h6>
+                        <div class="ui-g-12 form-control text-center">{{projectCoordinatorPersonId}}</div>
+                    </div>
+
+                    <div class="ui-g-12 ui-md-12">
+                        <p-table [columns]="contactHeader" [value]="infoCopy" [resizableColumns]="true" columnResizeMode="expand">
+                            <ng-template pTemplate="header" let-columns>
+                                <tr class="text-center">
+                                    <th *ngFor="let col of columns">
+                                        {{col.header}}
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                <tr class="text-center">
+                                    <td *ngFor="let col of columns">
+                                        {{rowData[col.field]}}
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-label pb-0" style="color:royalblue;font-weight: bold;">
+                        Workers Table:
+                    </div>
+                    <div class="ui-g-12 ui-md-12">
+                        <p-table [columns]="workerHeader" [value]="workers" [resizableColumns]="true" columnResizeMode="expand">
+                            <ng-template pTemplate="header" let-columns>
+                                <tr class="text-center">
+                                    <th *ngFor="let col of columns">
+                                        {{col.header}}
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                <tr class="text-center">
+                                    <td *ngFor="let col of columns">
+                                        {{rowData[col.field]}}
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+                <div class="ui-g mb-3">
+                    <div class="ui-g-12 ui-label pb-0" style="color:royalblue;font-weight: bold;">
+                        Accounting table:
+                    </div>
+                    <div class="ui-g-12 ui-md-12">
+                        <p-table [columns]="accountHeader" [value]="account" [resizableColumns]="true" columnResizeMode="expand">
+                            <ng-template pTemplate="header" let-columns>
+                                <tr class="text-center">
+                                    <th *ngFor="let col of columns">
+                                        {{col.header}}
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                <tr class="text-center">
+                                    <td *ngFor="let col of columns">
+                                        {{rowData[col.field]}}
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ui-g-1"></div>
+    </div>
+</div>

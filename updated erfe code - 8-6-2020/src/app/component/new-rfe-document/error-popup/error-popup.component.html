@@ -1,0 +1,22 @@
+<div class="ui-g-12">
+    <div class="ui-g-12 ui-md-12 ui-lg-12" style="text-align: center;">
+        <p-message *ngIf="!savedAsDraftRequiredPopup" severity="error" text="Please fill all the mandatory fields and clear the errors before Submitting."></p-message>
+        <p-message *ngIf="savedAsDraftRequiredPopup" severity="error" text="Please fill valid Account Numbers and Cost Centers before saving as draft."></p-message>
+    </div>
+    <div class="ui-g-12" *ngIf="!savedAsDraftRequiredPopup">
+        <div class="ui-g-1"></div>
+        <div class="ui-g-10" style="border: 1px solid red; border-radius: 5px; background-image: linear-gradient(to left, white,#ef9a9a); padding: 15px;">
+            <div *ngFor="let specificError of specificErrorMessagesContainer let i=index;">
+                <h6>{{i+1}}.&#160;{{specificError}}.</h6>
+            </div>
+        </div>
+        <div class="ui-g-1"></div>
+    </div>
+
+    <div class="ui-g-6 ui-md-6 ui-lg-6" style="text-align: right;">
+        <button pButton type="button" label="Ok" (click)="onClick()"></button>
+    </div>
+    <div class="ui-g-6 ui-md-6 ui-lg-6">
+        <button pButton type="button" label="Cancel" class="ui-button-danger" (click)="onClick()"></button>
+    </div>
+</div>

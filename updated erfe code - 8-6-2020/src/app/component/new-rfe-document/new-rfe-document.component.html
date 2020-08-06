@@ -1,0 +1,1195 @@
+<div class="ui-g pb-5 pt-5" *ngIf="isMobile">
+    <div [ngBusy]="[busyLoading]"></div>
+    <div class="ui-lg-1 ui-md-1 ui-sm-1 ui-xs-1"></div>
+    <div class="ui-lg-10 ui-md-10 ui-sm-10 ui-xs-10 ui-g-nopad rounded" style="cursor: pointer; border: 2px solid #3366ff;">
+        <div class="ui-g">
+            <div class="ui-g-12 ui-g-nopad pb-3">
+                <div style="background-color:white;background-image:url(../../../assets/img/Mesh_Header_Blue-LightBlue.png);background-size: contain; font-weight: bold;">
+                    <h4 class="text-white pt-2 pr-2 pl-2" style="font-weight: normal;">Corp PS RFE (Request For Expenditure)</h4>
+                    <h5 class="text-white p-2">Status : {{formStatus}}</h5>
+                </div>
+            </div>
+            <div class="ui-lg-12 ui-md-12 ui-sm-12 ui-xs-12 pb-3">
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-g-nopad card">
+                        <form [formGroup]="newRFEDocument" autocomplete="off" #rfeForm="ngForm">
+                            <div class="card-header">
+                                <h5 class="mb-0 text-primary">
+                                    {{newRFEDocument.get('projectTitle').value | uppercase}}
+                                </h5>
+                            </div>
+
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted">eRFE Details</h6>
+                                <div>
+                                    <h6><strong>Site Contact Name:&#160;</strong>
+                                        <br/>
+                                        <i>{{ newRFEDocument.get('siteContactName').value }}</i>
+                                    </h6>
+                                    <h6><strong>Project Coordinator Name:</strong>
+                                        <br/>
+                                        <i>{{ newRFEDocument.get('projectCoordinator').value }}</i>
+                                    </h6>
+                                    <h6><strong>Supplier Name:</strong>
+                                        <br/>
+                                        <i>{{ newRFEDocument.get('orderFrom').value }}</i>
+                                    </h6>
+                                    <div class="ui-g">
+                                        <div class="ui-g-6 ui-g-nopad">
+                                            <h6><strong>Start Date:</strong>
+                                                <br/> {{ newRFEDocument.get('startDate').value }}
+                                            </h6>
+                                        </div>
+                                        <div class="ui-g-6 ui-g-nopad pl-2">
+                                            <h6><strong>End Date:</strong>
+                                                <br/> {{ newRFEDocument.get('completionDate').value }}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                    <h6><strong>Approval Amount:</strong>
+                                        <br/>
+                                        <strong class="text-primary">{{ approvalAmount | currency:'USD':'symbol':'1.2-2' }}</strong>
+                                    </h6>
+                                    <h6><strong>Approvers:</strong>
+                                        <br/>
+                                        <h6 *ngFor="let approver of newRFEDocument.get('approval').controls; let i=index;">
+                                            {{i+1}}.&#160;<i [ngClass]="{'currentApproverIndicatorForMobile' :( currentApproverIndicator && i==currentApproverIndex && currentApproverIndex!== -1 )}">{{ newRFEDocument.get('approval').get([i, 'approvalName']).value }}</i>
+                                        </h6>
+                                    </h6>
+                                    <div class="ui-g">
+                                        <div class="ui-g-12">
+                                            <div *ngIf="isApprover" class="d-flex justify-content-center">
+                                                <button type="submit" class="btn btn-primary mr-1" (click)="approveDisplay=true">
+                                                <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>&#160;Approve</button>
+
+                                                <button type="submit" class="btn btn-danger ml-1" (click)="rejectDisplay=true">
+                                                <i class="fa fa-thumbs-o-down" aria-hidden="true"></i>&#160;Reject</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ui-g">
+                                        <div class="ui-g-12">
+                                            <div *ngIf="isComments" class="d-flex justify-content-center">
+                                                <button type="button" class="btn btn-primary" (click)="commentsDisplay=!commentsDisplay">
+                                                <i class="fa fa-comments-o" aria-hidden="true"></i>&#160;View Approver Comments</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ui-lg-1 ui-md-1 ui-sm-1 ui-xs-1"></div>
+</div>
+
+
+
+
+
+
+
+
+
+<div class="row d-flex justify-content-center" *ngIf="!isMobile">
+    <div class="col-md-11" style="margin-top: 30px;">
+        <div [ngBusy]="[busyLoading]">
+        </div>
+
+        <p-toast [style]="{marginTop: '80px'}" key="msg" position="top-center"></p-toast>
+        <p-card class="ui-card" [style]="{'border':'2px solid #3366ff'}">
+
+            <p-header>
+                <div style="background-color:white;background-image:url(../../../assets/img/Mesh_Header_Blue-LightBlue.png);background-size:
+                    contain; font-weight: bold; line-height: 65px;">
+                    <div class="ui-g">
+                        <div class="ui-g-9 headerlabel">Corp PS RFE (Request For Expenditure)</div>
+                        <div class="ui-g-3 headerlabel">Status : {{formStatus}}</div>
+                    </div>
+                    <div class="ui-g">
+                        <div class="ui-g-12" style="text-align: right;">
+                            <span class="button"><button pButton type="button" label="Close Without Saving"
+                                    (click)="closeWithoutSaving()" icon="fa fa-fw fa-close"
+                                    class="ui-button-raised ui-button-secondary"
+                                    [hidden]="!isClosable"></button></span>&#160;
+                            <span class="button"><button pButton type="button" label="Retract" icon="fa fa-fw fa-undo"
+                                    class="ui-button-raised ui-button-secondary" [hidden]="isRetract"
+                                    (click)="retractAction(formData)"></button></span>&#160;
+                            <span class="button"><button pButton type="button" label="View Approver Comments"
+                                    icon="fa fa-fw fa-comments-o" class="ui-button-raised ui-button-secondary"
+                                    [hidden]="!isComments"
+                                    (click)="commentsDisplay=!commentsDisplay"></button></span>&#160;
+                            <span class="button"><button pButton type="button" label="Approve"
+                                    icon="fa fa-fw fa-thumbs-o-up" class="ui-button-raised ui-button-secondary"
+                                    [hidden]="!isApprover" (click)="approveDisplay=true"></button></span>&#160;
+
+                            <span class="button"><button pButton type="button" label="Reject"
+                                    icon="fa fa-fw fa-thumbs-o-down" class="ui-button-raised ui-button-secondary"
+                                    [hidden]="!isApprover" (click)="rejectDisplay=true"></button></span>&#160;
+
+                            <span class="button"><button pButton type="button" label="Edit" icon="fa fa-fw fa-edit"
+                                    class="ui-button-raised ui-button-secondary" [hidden]="!isEditable||!isDisable"
+                                    (click)="edit(isEditSaveApprovedForm)"></button></span>&#160;
+
+                            <span class="button"><button pButton type="button" label="Update" icon="fa fa-fw fa-refresh"
+                                        (click)='saveAsDraft(newRFEDocument,corpResults, true)'
+                                        class="ui-button-raised ui-button-secondary"
+                                        [hidden]="!isEditSaveApprovedForm" [disabled]="!adminEditUpdateAddRowButtonShow"></button></span>&#160;
+
+                            <span class="button"><button pButton type="button" label="Renewal"
+                                    icon="fa fa-fw fa-refresh" class="ui-button-raised ui-button-secondary"
+                                    [hidden]="isRenewal" (click)="renewalDisplay=true"></button></span>&#160;
+
+                            <span class="button"><button pButton type="button" label="Save As Draft" icon="fa fa-fw fa-save"
+                                    (click)="saveAsDraft(newRFEDocument,corpResults, false)"
+                                    class="ui-button-raised ui-button-secondary"
+                                    [hidden]="!isSave"></button></span>&#160;
+
+                            <span class="button"><button pButton type="button" label="Submit" icon="fa fa-fw fa-save"
+                                    (click)="submitForm(newRFEDocument,corpResults)"
+                                    class="ui-button-raised ui-button-secondary"
+                                    [hidden]="!isSubmit"></button></span>&#160;
+
+                            <span class="button"><button pButton type="button" label="Print" icon="fa fa-fw fa-print"
+                                    (click)='confirmPrint()'
+                                    class="ui-button-raised ui-button-secondary"
+                                    [hidden]="!isPrintable"></button></span>&#160;
+                        </div>
+                    </div>
+                </div>
+                <p-dialog header="Please Enter your Reject Commments" appendTo="body" [modal]="true" [(visible)]="rejectDisplay" [style]="{width:'75%', height: 'auto'}" (onHide)="close()">
+
+                    <form #rejectForm="ngForm" (ngSubmit)="reject(rejectForm.value,formData,pendingApprovers)">
+                        <div>
+                            <textarea class="form-control form-control-lg" autoResize="autoResize" id="rejectComments" name="rejectComments" rows="4" cols="40" type="text" [(ngModel)]="rejectComments" #rejectComm="ngModel" required pInputTextarea></textarea>
+                            <p-message severity="warn" text="Commments for rejection is mandatory" *ngIf="(rejectForm.invalid || !(rejectComm.value?.trim().length > 0))"></p-message>
+                        </div>
+
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-label ml-2 mb-0" *ngIf="isAdmin&&!isUser">
+                                <h4 class="first mb-0">Current Approver</h4>
+                            </div>
+                            <div class="ui-lg-6 ui-md-6 ui-sm-6 ui-xs-12">
+                                <ng-template [ngIf]="isAdmin&&!isUser">
+                                    <input type="text" class="ml-2" size="30" [value]="pendingApproverAsString" [(ngModel)]="selectedApprover" #selected="ngModel" name="selectedApprover" id="selectedApprover" readonly pInputText>
+                                </ng-template>
+                            </div>
+                            <div class="ui-lg-6 ui-md-6 ui-sm-6 ui-xs-12" style="text-align: right">
+                                <button type="submit" class="btn btn-primary p-2 m-2" [disabled]="(rejectForm.invalid || !(rejectComm.value?.trim().length > 0))">&#160;&#160;&#160;Ok&#160;&#160;&#160;</button>
+                                <button type="button" class="btn btn-danger p-2 m-2" (click)="rejectDisplay=false" value="Reset">Cancel</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </p-dialog>
+
+                <p-dialog header="Approver Commments" appendTo="body" [modal]="true" [(visible)]="commentsDisplay" [style]="{width:'75%', height: 'auto'}" (onHide)="close()">
+
+                    <p-table [value]="approverComments" class="text-center">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>Approver Name</th>
+                                <th>Action</th>
+                                <th>Date</th>
+                                <th>Comments</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-approver>
+                            <tr>
+                                <td>{{approver.approverName}}</td>
+                                <td>{{approver.approverAction}}</td>
+                                <td>{{approver.actionDate | date :"MM/dd/yyyy"}}</td>
+                                <td>{{approver.approverComments}}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                    <p-footer>
+                        <button type="button" (click)="commentsDisplay=false" class="btn btn-primary">Ok</button>
+                        <button type="button" (click)="commentsDisplay=false" class="btn btn-danger" value="Reset">Cancel</button>
+                    </p-footer>
+
+                </p-dialog>
+
+                <p-dialog header="Please Enter your Approve Commments" appendTo="body" [modal]="true" [(visible)]="approveDisplay" [style]="{width:'75%', height: 'auto'}" (onHide)="close()">
+
+                    <form #approveForm="ngForm" (ngSubmit)="approve(approveForm.value,formData,pendingApprovers)">
+                        <div>
+                            <textarea class="form-control form-control-lg" autoResize="autoResize" id="approveComments" name="approveComments" rows="4" cols="40" type="text" [(ngModel)]="approveComments" #approveComm="ngModel" pInputTextarea></textarea>
+                            <p-message severity="warn" text="Commments for Approval is mandatory" *ngIf="(approveForm.invalid || !(approveComm.value?.trim().length > 0)) && (isAdmin&&!isUser)">
+                            </p-message>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-label ml-2 mb-0" *ngIf="isAdmin&&!isUser">
+                                <h4 class="first mb-0">Current Approver</h4>
+                            </div>
+                            <div class="ui-lg-6 ui-md-6 ui-sm-6 ui-xs-12">
+                                <ng-template [ngIf]="isAdmin&&!isUser">
+                                    <input type="text" class="ml-2" size="30" [value]="pendingApproverAsString" [(ngModel)]="selectedApprover" #selected="ngModel" name="selectedApprover" id="selectedApprover" readonly pInputText>
+                                </ng-template>
+                            </div>
+                            <div class="ui-lg-6 ui-md-6 ui-sm-6 ui-xs-12" style="text-align: right">
+                                <button type="submit" class="btn btn-primary p-2 m-2" [disabled]="(approveForm.invalid || !(approveComm.value?.trim().length > 0)) && (isAdmin&&!isUser)">&#160;&#160;&#160;Ok&#160;&#160;&#160;</button>
+                                <button type="button" class="btn btn-danger p-2 m-2" (click)="approveDisplay=false" value="Reset">Cancel</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </p-dialog>
+                <p-dialog header="Please Enter your Retract Commments" appendTo="body" [modal]="true" [(visible)]="retractDisplay" [style]="{width:'75%', height: 'auto'}" (onHide)="close()">
+
+                    <form #retractForm="ngForm" (ngSubmit)="retract(formData,retractComments,requestorData)">
+                        <div>
+                            <textarea class="form-control form-control-lg" autoResize="autoResize" id="retractComments" name="retractComments" rows="4" cols="40" type="text" [(ngModel)]="retractComments" #retractComm="ngModel" pInputTextarea></textarea>
+                            <p-message severity="warn" text="Commments for Retract is mandatory" *ngIf="(retractForm.invalid || !(retractComm.value?.trim().length > 0)) && (isAdmin)">
+                            </p-message>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-label ml-2 mb-0" [hidden]="isRequestComment">
+                                <h4 class="first mb-0">Requestor</h4>
+                            </div>
+                            <div class="ui-lg-6 ui-md-6 ui-sm-6 ui-xs-12">
+                                <ng-template [ngIf]="!isRequestComment">
+                                    <input type="text" class="ml-2" size="30" [(ngModel)]="requestorData" #selected="ngModel" name="requestorData" id="requestorData" readonly pInputText>
+                                </ng-template>
+                            </div>
+
+                            <div class="ui-lg-6 ui-md-6 ui-sm-6 ui-xs-12" style="text-align: right">
+                                <button type="submit" class="btn btn-primary p-2 m-2" [disabled]="(retractComm.invalid || !(retractComm.value?.trim().length > 0)) && (isAdmin)">&#160;&#160;&#160;Ok&#160;&#160;&#160;</button>
+                                <button type="button" class="btn btn-danger p-2 m-2" (click)="retractDisplay=false" value="Reset">Cancel</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </p-dialog>
+
+                <p-dialog header="Renew RFE" appendTo="body" [modal]="true" [(visible)]="renewalDisplay" [style]="{width:'75%', height: 'auto'}" (onHide)="close()">
+
+                    <form #RenewForm="ngForm">
+                        <h3 class="first ml-2">RFE Number</h3>
+                        <div class="ui-g">
+                            <div class="ui-lg-9 ui-md-8 ui-sm-12 ui-xs-12">
+                                <input type="number" class="form-control form-control-lg" #rfeNumberField="ngModel" [(ngModel)]="rfeNumberForRenewal" id="renewalComments" name="renewalComments" (keyup)="rfeNumberExist=false" required pInput />
+                                <p-message severity="warn" text="RFE Number is mandatory" *ngIf="RenewForm.invalid">
+                                </p-message>
+                                <p-message severity="error" text="Sorry this RFE Number does not exist" *ngIf="rfeNumberExist && RenewForm.valid"></p-message>
+                            </div>
+                            <div class="ui-lg-3 ui-md-4 ui-sm-12 ui-xs-12">
+                                <button type="button" class="btn btn-primary p-2 mr-2" [disabled]="RenewForm.invalid" (click)="renewalRFENumberValidation(rfeNumberField.value, formCorpReqNumber)">Renew</button>
+                                <button type="button" class="btn btn-danger p-2 ml-2" (click)="renewalDisplay=false" value="Reset">Cancel</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </p-dialog>
+
+
+                <!-- Main Form -->
+            </p-header>
+            <div class="ui-fluid ui-corner-all">
+
+                <form [formGroup]="newRFEDocument" autocomplete="off" #rfeForm="ngForm">
+
+                    <!-- Row: 0 -->
+                    <div class="ui-g">
+                        <div class="ui-lg-6 ui-md-3 ui-sm-12 ui-xs-12 text-danger">
+                            <small><strong>All * marked fields are mandatory</strong></small>
+                        </div>
+                        <div class="ui-lg-2 ui-md-3 ui-sm-12 ui-xs-12">
+                            <div class="ui-g-12 ui-label">
+                                Origin Date
+                            </div>
+                            <input id="input" type="text" size="40" pInputText formControlName="originDate" readonly [ngStyle]="{'font-weight':isDisable||newRFEDocument.disabled ? 'bold' : 'normal'}">
+                        </div>
+                        <div class="ui-lg-2 ui-md-4 ui-sm-12 ui-xs-12">
+                            <div class="ui-g-12 ui-label">
+                                PS Request Number
+                            </div>
+                            <input id="input" type="text" size="40" pInputText formControlName="psReqNumber" readonly [ngStyle]="{'font-weight':isDisable||newRFEDocument.disabled ? 'bold' : 'normal'}">
+
+                        </div>
+                        <div class="ui-lg-2 ui-md-2 ui-sm-12 ui-xs-12">
+                            <div class="ui-g-12 ui-label">
+                                {{rfeNoLabel}}
+                            </div>
+                            <input id="input" type="text" size="40" pInputText formControlName="rfeNum" readonly [ngStyle]="{'font-weight':isDisable||newRFEDocument.disabled ? 'bold' : 'normal'}">
+                        </div>
+                    </div>
+
+                    <!-- Row: 1 -->
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-label" style="color:royalblue
+                                ;font-weight: bold;">
+                            Contact Information<span class="pl-2"><i class="fa fa-question-circle" aria-hidden="true" tooltip="Format: Last Name<space>First Name or Last Name alone (e.g. Smith John  / Smith). '%' can be added for wildcard search. Click Help to know more." placement="right"></i></span>
+                        </div>
+                        <div class="ui-g-12 ui-md-4 ui-g-nopad">
+                            <div class="ui-g-12 ui-label">
+                                Site Contact Name&#160;<span class="text-danger">*</span>
+                            </div>
+                            <div class="ui-g-12">
+                                <div class="ui-inputgroup">
+                                    <span class="input-group-prepend">
+                                        <button class="btn btn-primary" type="button" [disabled]="newRFEDocument.disabled || (newRFEDocument.get('workerInfo').disabled && newRFEDocument.get('acctInfo').disabled)" (click)="noDataForFirstLastName(); siteNamePopup();" tooltip="Search pop-up" aria-label="Search pop-up">
+                                            <i class="fa fa-external-link" aria-hidden="true"></i>
+                                        </button>
+                                    </span>
+                                    <!-- <button pButton type="button" label="Search" *ngIf="newRFEDocument.enabled && newRFEDocument.get('workerInfo').enabled && newRFEDocument.get('acctInfo').enabled" (click)="siteNamePopup(); noDataForFirstLastName();"></button> -->
+
+                                    <input class="form-control" id="siteContactName" formControlName="siteContactName" type="text" placeholder="LastName FirstName" [ngStyle]="{'font-weight':isDisable||newRFEDocument.disabled ? 'bold' : 'normal'}" (keydown.enter)="$event.preventDefault()"
+                                        (focusout)="getDetailsByUserName(newRFEDocument.get('siteContactName').value, 'siteContactName', 0)" pInputText #siteContactName>
+
+                                    <!-- <span class="ui-inputgroup-addon"><i class="pi pi-chevron-down"></i></span> -->
+                                </div>
+
+                                <!-- popup 1 -->
+                                <p-dialog header="Select Site Contact Name" appendTo="body" [modal]="true" [breakpoint]='100' [positionTop]='150' [focusOnShow]="false" [(visible)]="siteNameDisplay" [responsive]='true' [dismissableMask]='true' [style]="{width: '95%', height: 'auto','position':'absolute'}"
+                                    (onShow)="commonFormDisplaySiteContact.focusLastName(); commonFormDisplaySiteContact.populateNames(userLastName, userFirstName);" (onHide)="commonFormDisplaySiteContact.resetForm(); closeSiteContactNamePopup();">
+                                    <app-eidpopup [commonFormDisplay]="'true'" (eventClick)="handleName($event)" (closeSiteContactNamePopup)="closeSiteContactNamePopup()" #commonFormDisplaySiteContact>
+                                    </app-eidpopup>
+                                </p-dialog>
+
+                                <p-message severity="error" [text]="siteContactNameNotAvailableMsg" *ngIf="siteContactNameNotAvailable && newRFEDocument.get('personID').value == ''">
+                                </p-message>
+                                <p-message severity="error" [text]="siteContactMsg" *ngIf="siteContactNameValid">
+                                </p-message>
+                                <p-message severity="error" [text]="siteContactNameCheckMsg" *ngIf="siteContactNameCheck">
+                                </p-message>
+
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-md-4 ui-g-nopad">
+                            <div class="ui-g-12 ui-label">
+                                Phone Number:
+                            </div>
+                            <div class="ui-g-12">
+                                <input class="form-control" readonly id="phoneNumber" formControlName="phoneNumber" type="text" [ngStyle]="{'font-weight':isDisable||newRFEDocument.disabled ? 'bold' : 'normal'}" pInputText>
+                                <p-message severity="error" text="Phone Number is required" *ngIf="submitted && newRFEDocument.controls['phoneNumber'].errors?.required">
+                                </p-message>
+                            </div>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-4 ui-g-nopad">
+                            <div class="ui-g-12 ui-label">
+                                Person ID:
+                            </div>
+                            <div class="ui-g-12">
+                                <input class="form-control" readonly id="personID" formControlName="personID" type="text" [ngStyle]="{'font-weight':isDisable||newRFEDocument.disabled ? 'bold' : 'normal'}" pInputText>
+                                <p-message severity="error" text="Person ID is
+                                    required" *ngIf="submitted && newRFEDocument.controls['personID'].errors?.required">
+                                </p-message>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row: 2 -->
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-4 ui-g-nopad">
+                            <div class="ui-g-12 ui-label">
+                                Project Coordinator:
+                            </div>
+                            <div class="ui-g-12">
+                                <div class="ui-inputgroup">
+                                    <span class="input-group-prepend">
+                                        <button class="btn btn-primary" type="button" [disabled]="newRFEDocument.disabled || (newRFEDocument.get('workerInfo').disabled && newRFEDocument.get('acctInfo').disabled)" (click)="noDataForFirstLastName(); ptCoordinaterPopup();" tooltip="Search pop-up" aria-label="Search pop-up">
+                                            <i class="fa fa-external-link" aria-hidden="true"></i>
+                                        </button>
+                                    </span>
+                                    <input class="form-control" id="projectCoordinator" formControlName="projectCoordinator" type="text" placeholder="LastName FirstName" [ngStyle]="{'font-weight':isDisable||newRFEDocument.disabled ? 'bold' : 'normal'}" (keydown.enter)="$event.preventDefault()"
+                                        (focusout)="getDetailsByUserName(newRFEDocument.get('projectCoordinator').value, 'projectCoordinator', 0)" pInputText>
+                                </div>
+
+                                <!-- pop up 2 -->
+                                <p-dialog header="Select Project Coordinator" appendTo="body" [modal]="true" [breakpoint]='100' [positionTop]='150' [focusOnShow]="false" [(visible)]="ptCoordinaterDisplay" [responsive]='true' [dismissableMask]='true' [style]="{width:
+                                    '95%', height: '50%','position':'absolute'}" (onShow)="commonFormDisplayProjectCoordinator.focusLastName(); commonFormDisplayProjectCoordinator.populateNames(userLastName, userFirstName);" (onHide)="commonFormDisplayProjectCoordinator.resetForm(); closeProjectCoordinatorNamePopup();">
+                                    <app-eidpopup [commonFormDisplay]="'true'" (eventClick)="handleCoordinators($event)" (closePopup)="closePopup(); closeProjectCoordinatorNamePopup();" #commonFormDisplayProjectCoordinator>
+                                    </app-eidpopup>
+                                </p-dialog>
+
+                                <p-message severity="error" [text]="coordinatorNameCheckMsg" *ngIf="coordinatorNameCheck">
+                                </p-message>
+                                <p-message severity="error" [text]="projectCoordinatorNameNotAvailableMsg" *ngIf="projectCoordinatorNameNotAvailable && newRFEDocument.get('coordinatorPersonID').value == ''">
+                                </p-message>
+                            </div>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-4 ui-g-nopad">
+                            <div class="ui-g-12 ui-label">
+                                Phone Number:
+                            </div>
+                            <div class="ui-g-12">
+                                <input class="form-control" readonly id="coordinatorPhoneNumber" formControlName="coordinatorPhoneNumber" type="text" [ngStyle]="{'font-weight':isDisable||newRFEDocument.disabled ? 'bold' : 'normal'}" pInputText>
+                                <p-message severity="error" text="Phone Number
+                                    is required" *ngIf="submitted && (newRFEDocument.controls['coordinatorPhoneNumber'].errors?.required)">
+                                </p-message>
+                            </div>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-4 ui-g-nopad">
+                            <div class="ui-g-12 ui-label">
+                                Person ID:
+                            </div>
+                            <div class="ui-g-12">
+                                <input class="form-control" readonly id="coordinatorpersonID" formControlName="coordinatorPersonID" type="text" [ngStyle]="{'font-weight':isDisable||newRFEDocument.disabled ? 'bold' : 'normal'}" pInputText>
+                                <p-message severity="error" text="Person ID is
+                                    required" *ngIf="submitted && (newRFEDocument.controls['coordinatorPersonID'].errors?.required)">
+                                </p-message>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row: 3 -->
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-label" style="color:royalblue
+                            ;font-weight: bold;">
+                            Supplier Information<span class="pl-2"><i class="fa fa-question-circle" aria-hidden="true" tooltip="Start typing the supplier name and tab out. '%' can be added for wildcard search. Click Help to know more." placement="right"></i></span>
+                        </div>
+                        <div class="ui-g-12 ui-md-4 ui-g-nopad">
+                            <div class="ui-g-12 ui-label">
+                                Order From (Supplier Name) :&#160;<span class="text-danger">*</span>
+                            </div>
+                            <div class="ui-g-12">
+
+                                <div class="ui-inputgroup">
+                                    <span class="input-group-prepend">
+                                        <button class="btn btn-primary" type="button" [disabled]="newRFEDocument.disabled || (newRFEDocument.get('workerInfo').disabled && newRFEDocument.get('acctInfo').disabled)" (click)="noDataForSupplierName(); orderFromPopup();" tooltip="Search pop-up" aria-label="Search pop-up">
+                                            <i class="fa fa-external-link" aria-hidden="true"></i>
+                                        </button>
+                                    </span>
+                                    <input class="form-control" id="orderFrom" formControlName="orderFrom" type="text" placeholder="Supplier Name" [ngStyle]="{'font-weight':isDisable||newRFEDocument.disabled ? 'bold' : 'normal'}" (keydown.enter)="$event.preventDefault()" (focusout)="getDetailsBySupplierName(newRFEDocument.get('orderFrom').value)"
+                                        pInputText>
+                                </div>
+
+                                <!-- pop up 3 -->
+                                <p-dialog header="Select a Supplier" appendTo="body" [modal]="true" [positionTop]='150' [focusOnShow]="false" [(visible)]="orderDisplay" [responsive]='true' [dismissableMask]='true' [style]="{width:
+                                    '95%', height: 'auto','position':'absolute'}" (onShow)="orderFromDisplay.focusSupplierName(); orderFromDisplay.populateSupplierName(userSupplierName);" (onHide)="orderFromDisplay.resetForm(); closeOrderFromPopup();">
+                                    <app-eidpopup [orderFormDisplay]="'true'" (eventClick)="handleOrder($event)" (closeOrderFromPopup)="closeOrderFromPopup()" #orderFromDisplay>
+                                    </app-eidpopup>
+                                </p-dialog>
+
+                                <p-message severity="error" [text]="supplierNameNotAvailableMsg" *ngIf="supplierNameNotAvailable && newRFEDocument.get('supplierBase').value == ''">
+                                </p-message>
+                                <p-message severity="error" [text]="orderFromMsg" *ngIf="orderFromValid">
+                                </p-message>
+
+                            </div>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-4 ui-g-nopad">
+                            <div class="ui-g-12 ui-label">
+                                Supplier Base:
+                            </div>
+                            <div class="ui-g-12">
+                                <input class="form-control" readonly id="supplierBase" formControlName="supplierBase" type="text" [ngStyle]="{'font-weight':isDisable||newRFEDocument.disabled ? 'bold' : 'normal'}" pInputText>
+                            </div>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-2 ui-g-nopad">
+                            <div class="ui-g-12 ui-label">
+                                Start Date:&#160;<span class="text-danger">*</span>
+                            </div>
+                            <div class="ui-g-12">
+                                <p-calendar formControlName="startDate" placeholder="mm/dd/yyyy" [inputStyle]="{'font-size':'18px','text-align':'Center'}" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2000:2050" (onClose)="startDateClosed();setMaxMinDate();"
+                                    [maxDate]="maxDate" (keydown.enter)="$event.preventDefault()">
+                                    </p-calendar>
+                                    <p-message severity="error" [text]="startDateMsg" *ngIf="startDateValid">
+                                    </p-message>
+                            </div>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-2 ui-g-nopad">
+                            <div class="ui-g-12 ui-label">
+                                Completion Date:&#160;<span class="text-danger">*</span>
+                            </div>
+                            <div class="ui-g-12">
+                                <p-calendar formControlName="completionDate" placeholder="mm/dd/yyyy" [inputStyle]="{'font-size':'18px','text-align':'Center'}" showButtonBar="true" [monthNavigator]="true" [yearNavigator]="true" yearRange="2000:2050" (onClose)="completionDateClosed();setMaxMinDate();"
+                                    [minDate]="minDate" (keydown.enter)="$event.preventDefault()">
+                                    </p-calendar>
+                                    <p-message severity="error" [text]="completionDateMsg" *ngIf="completionDateValid">
+                                    </p-message>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Row: 4 -->
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-label">
+                            Type of Bid?
+                        </div>
+                        <div class="ui-lg-1 ui-md-3 ui-sm-12 ui-xs-12">
+                            <p-radioButton name="radio" value="1" formControlName="bid" label="Hourly">
+                            </p-radioButton>
+                        </div>
+                        <div class="ui-lg-1 ui-md-3 ui-sm-12 ui-xs-12">
+                            <p-radioButton name="radio" value="2" formControlName="bid" label="Fixed">
+                            </p-radioButton>
+                        </div>
+                        <div class="ui-lg-10 ui-md-6"></div>
+                    </div>
+
+                    <!-- Row: 5  -->
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-label" style="color:royalblue
+                            ;font-weight: bold;">
+                            Worker Information
+                        </div>
+
+                        <!-- Table -->
+                        <div *ngIf="true">
+                            <!-- Buttons -->
+                            <!-- <div class="form-group ui-g p-2 mb-1" *ngIf="!isDisable"> -->
+                            <div class="form-group ui-g p-2 mb-1" *ngIf="newRFEDocument.get('workerInfo').enabled">
+                                <div class="ui-lg-4 ui-md-4 ui-sm-12 ui-xs-12 d-flex justify-content-start">
+                                    <button class="btn btn-outline-primary ui-sm-12" type="button" [title]="'ADD A NEW ROW'" (click)="addTable(1)" [disabled]="newRFEDocument.get('bid').value==2">
+                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                        Add Another Row
+                                    </button>
+                                </div>
+                                <div class="ui-lg-4 ui-md-4 ui-sm-12 ui-xs-12 d-flex justify-content-center">
+                                    <div class="ui-g">
+                                        <div class="ui-lg-6 ui-md-6 ui-sm-12 ui-xs-12">
+                                            <input type="number" class="form-control ui-sm-12" placeholder="Enter no. of rows" #rows (blur)="workerMaxRows()" formControlName="workerNumOfRows" (keyup)="workerRowsPositiveValues()" [readonly]="newRFEDocument.get('bid').value==2" (keydown.enter)="$event.preventDefault()">
+                                        </div>
+                                        <div class="ui-lg-6 ui-md-6 ui-sm-12 ui-xs-12">
+                                            <button class="btn btn-outline-primary ui-sm-12" type="button" (click)="addTable(rows.value)" [disabled]="newRFEDocument.get('bid').value==2">Rows to Add</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="ui-lg-4 ui-md-4 ui-sm-12 ui-xs-12 d-flex justify-content-end">
+                                    <button class="btn btn-outline-danger ui-sm-12" type="button" [title]="'REMOVE ALL'" (click)="removeTable(workerInfo)" [disabled]="newRFEDocument.get('bid').value==2">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                        Remove All
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-center">
+                                <table class="table table-striped table-bordered border border-primary m-0">
+                                    <thead class="table-primary text-center">
+                                        <tr>
+                                            <th>Resource Title</th>
+                                            <th>Est. Hours&#160;<span *ngIf="newRFEDocument.get('bid').value==1" class="text-danger">*</span></th>
+                                            <th>Rate&#160;<span *ngIf="newRFEDocument.get('bid').value==1" class="text-danger">*</span></th>
+                                            <th [hidden]="isDisable || newRFEDocument.get('workerInfo').disabled">Trash</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody formArrayName="workerInfo" class="table-hover">
+                                        <tr [formGroupName]="i" *ngFor="let
+                                            tableRows of
+                                            workerInfo.controls; let i=index;
+                                            let last=last">
+                                            <td>
+                                                <input class="form-control" id="{{'resourceTitle' + i}}" type="text" placeholder="Resource Title" formControlName="resourceTitle" [readonly]="newRFEDocument.get('bid').value==2" (keydown.enter)="$event.preventDefault()">
+                                            </td>
+                                            <td>
+                                                <!-- <input class="form-control" id="{{'estHours' + i}}" type="number" placeholder="Est. Hours" formControlName="estHours" (keyup)="estPositiveValues(i)"> -->
+                                                <input class="form-control" id="{{'estHours' + i}}" type="text" placeholder="Est. Hours" formControlName="estHours" (keyup)="estPositiveValues(i)" (blur)="estHoursLeft(i)" [readonly]="newRFEDocument.get('bid').value==2" (keydown.enter)="$event.preventDefault()">
+                                                <p-message severity="error" [text]="estMsg" *ngIf="(newRFEDocument.get('workerInfo').get([i, 'estHours']).invalid) && (newRFEDocument.get('workerInfo').get([i, 'estHours']).touched || newRFEDocument.get('workerInfo').get([i, 'estHours']).dirty)">
+                                                </p-message>
+                                            </td>
+                                            <td>
+                                                <diV class="ui-g">
+                                                    <div class="ui-g-1 ui-g-nopad align-self-center text-center"><strong style="font-size: 17px;">$</strong></div>
+                                                    <div class="ui-g-11 ui-g-nopad">
+                                                        <input class="form-control" id="{{'rate' + i}}" type="text" placeholder="Rate" formControlName="rate" (keyup)="ratePositiveValues(i)" (blur)="rateLeft(i)" [readonly]="newRFEDocument.get('bid').value==2" (keydown.enter)="$event.preventDefault()">
+                                                        <p-message severity="error" [text]="rateMsg" *ngIf="(newRFEDocument.get('workerInfo').get([i, 'rate']).invalid) && (newRFEDocument.get('workerInfo').get([i, 'rate']).touched || newRFEDocument.get('workerInfo').get([i, 'rate']).dirty)">
+                                                        </p-message>
+                                                    </div>
+                                                </diV>
+                                            </td>
+                                            <td class="text-center" [hidden]="isDisable || newRFEDocument.get('workerInfo').disabled">
+                                                <i *ngIf="i===0" class="fa fa-asterisk mt-2 text-danger" aria-hidden="true"></i>
+                                                <i *ngIf="i!==0" (click)="removeRow(i)" class="fa fa-trash fa-2x"></i>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <tr>
+                                        <td colspan="4" class="p-0">
+                                            <div class="ui-g-12" style="padding-left: 50%;">
+                                                <div class="ui-g-5
+                                                    text-secondary">
+                                                    <h6 class="mt-2">Additional Expenses:
+                                                    </h6>
+                                                </div>
+                                                <div class="ui-g-5">
+                                                    <diV class="ui-g">
+                                                        <div class="ui-g-1 ui-g-nopad align-self-center text-center">
+                                                            <strong style="font-size: 17px;">$</strong></div>
+                                                        <div class="ui-g-11 ui-g-nopad">
+                                                            <!-- <input class="form-control" id="additionalExpenses" formControlName="additionalExpenses" type="number" (keyup)="additionalExpensesPositiveValues()" [ngStyle]="{'font-weight':isDisable||newRFEDocument.disabled ? 'bold' : 'normal'}" pInputText> -->
+                                                            <input type="text" class="form-control" id="additionalExpenses" formControlName="additionalExpenses" (keyup)="additionalExpensesPositiveValues()" (blur)="additionalExpensesLeft()" [ngStyle]="{'font-weight':isDisable||newRFEDocument.disabled ? 'bold' : 'normal'}"
+                                                                (keydown.enter)="$event.preventDefault()" pInputText>
+                                                        </div>
+                                                    </diV>
+                                                </div>
+                                                <div class="ui-g-2"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="newRFEDocument.get('bid').value==2">
+                                        <td colspan="4" class="p-0">
+                                            <div class="ui-g-12" style="padding-left: 50%;">
+                                                <div class="ui-g-5
+                                                    text-secondary">
+                                                    <h6 class="mt-2">Fixed Bid Amount:&#160;<span class="text-danger">*</span>
+                                                    </h6>
+                                                </div>
+                                                <div class="ui-g-5">
+                                                    <diV class="ui-g">
+                                                        <div class="ui-g-1 ui-g-nopad align-self-center text-center">
+                                                            <strong style="font-size: 17px;">$</strong></div>
+                                                        <div class="ui-g-11 ui-g-nopad">
+                                                            <!-- <input class="form-control" id="fixedBidAmount" formControlName="fixedBidAmount" type="number" (keyup)="fixedBidPositiveValues()" (blur)="fixedBidClosed()" [ngStyle]="{'font-weight':isDisable||newRFEDocument.disabled ? 'bold' : 'normal'}" pInputText> -->
+                                                            <input type="text" class="form-control" id="fixedBidAmount" formControlName="fixedBidAmount" (keyup)="fixedBidPositiveValues()" (blur)="fixedBidClosed()" [ngStyle]="{'font-weight':isDisable||newRFEDocument.disabled ? 'bold' : 'normal'}" (keydown.enter)="$event.preventDefault()"
+                                                                pInputText>
+                                                            <p-message severity="error" [text]="fixedBidMsg" *ngIf="fixedBidValid"></p-message>
+                                                        </div>
+                                                    </diV>
+
+                                                </div>
+                                                <div class="ui-g-2"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" class="p-0">
+                                            <div class="ui-g-12" style="padding-left: 50%;">
+                                                <div class="ui-g-5
+                                                    text-secondary">
+                                                    <h6 class="mt-2">Approval Amount:
+                                                    </h6>
+                                                </div>
+                                                <div class="ui-g-7">
+                                                    <h6 class="mt-2 text-dark">
+                                                        <strong>{{ approvalAmount | currency:'USD':'symbol':'1.2-2' }}</strong>
+                                                    </h6>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <p-message severity="error" [text]="workerRowsToAddMsg" *ngIf="workerRowsToAddValid">
+                            </p-message>
+                            <p-message severity="error" [text]="approvalAmountZeroMsg" *ngIf="approvalAmountZeroValid && !isDisable">
+                            </p-message>
+                        </div>
+
+                    </div>
+                    <!-- Row: 6 -->
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-label mt-2" style="color:royalblue
+                            ;font-weight: bold;">
+                            Project Information
+                        </div>
+                        <div class="ui-g-12 ui-md-4 ui-g-nopad">
+                            <div class="ui-g-12 ui-label">
+                                Project Title:&#160;<span class="text-danger">*</span>
+                            </div>
+                            <div class="ui-g-12">
+                                <textarea class="form-control" autoResize="autoResize" id="projectTitle" formControlName="projectTitle" rows="4" type="text" (blur)="projectTitleLeft()" pInputTextarea></textarea>
+                                <p-message severity="error" [text]="projectTitleMsg" *ngIf="projectTitleValid">
+                                </p-message>
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-md-4 ui-g-nopad">
+                            <div class="ui-g-12 ui-label">
+                                Description of all Services Provided:&#160;<span class="text-danger">*</span>
+                            </div>
+                            <div class="ui-g-12">
+                                <textarea class="form-control" autoResize="autoResize" id="serviceDescription" formControlName="serviceDescription" rows="4" type="text" (blur)="descAllServeLeft()" pInputTextarea></textarea>
+                                <p-message severity="error" [text]="descAllServeMsg" *ngIf="descAllServeValid">
+                                </p-message>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Row: 7  -->
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-label" style="color:royalblue
+                            ;font-weight: bold;">
+                            Accounting Information - Cost Distribution of Total Committed Dollars
+                        </div>
+
+                        <!-- Table -->
+                        <div *ngIf="true">
+                            <!-- Buttons -->
+                            <div class="form-group ui-g p-2 mb-1" *ngIf="newRFEDocument.get('acctInfo').enabled">
+                                <div class="ui-lg-4 ui-md-4 ui-sm-12 ui-xs-12 d-flex justify-content-start">
+                                    <button class="btn btn-outline-primary ui-sm-12" type="button" [title]="'ADD A NEW ROW'" (click)="addAcctTable(1)">
+                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                        Add Another Row
+                                    </button>
+                                </div>
+                                <div class="ui-lg-4 ui-md-4 ui-sm-12 ui-xs-12 d-flex justify-content-center">
+                                    <div class="ui-g">
+                                        <div class="ui-lg-6 ui-md-6 ui-sm-12 ui-xs-12">
+                                            <input type="number" class="form-control ui-sm-12" placeholder="Enter no. of rows" #acctRows formControlName="acctNumOfRows" (keyup)="accountingInfoRowsPositiveValues()" (blur)="accountMaxRows()" (keydown.enter)="$event.preventDefault()">
+                                        </div>
+                                        <div class="ui-lg-6 ui-md-6 ui-sm-12 ui-xs-12">
+                                            <button class="btn btn-outline-primary ui-sm-12" type="button" (click)="addAcctTable((+acctRows.value))">Rows to Add</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="ui-lg-4 ui-md-4 ui-sm-12 ui-xs-12 d-flex justify-content-end">
+                                    <button class="btn btn-outline-danger ui-sm-12" type="button" [title]="'REMOVE ALL'" (click)="removeAcctTable(acctInfo)">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>Remove All
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-center">
+                                <table class="table table-striped table-bordered
+                                    border border-primary m-0">
+                                    <thead class="table-primary text-center">
+                                        <tr>
+                                            <th>Account No.&#160;<span class="text-danger">*</span></th>
+                                            <th>Cost Center&#160;<span class="text-danger">*</span></th>
+                                            <th>WBS</th>
+                                            <th>Distribution&#160;<span class="text-danger">*</span>&#160;%</th>
+                                            <th>Other charts of account fields</th>
+                                            <th [hidden]="isDisable || newRFEDocument.get('acctInfo').disabled">Trash</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody formArrayName="acctInfo" class="table-hover">
+                                        <tr [formGroupName]="i" *ngFor="let
+                                            tableRows of
+                                            acctInfo.controls; let i=index; let
+                                            last=last">
+                                            <td>
+                                                <div class="ui-g">
+                                                    <div class="ui-lg-10 ui-md-8 ui-sm-12 ui-xs-12 ui-g-nopad">
+                                                        <p-autoComplete type="number" placeholder="Account" formControlName="account" [suggestions]="filterDataForAccountNumber" [size]="50" [delay]="50" [inputStyle]="{'text-align': 'center','margin-top':'2px', 'margin-bottom':'2px','font-weight':newRFEDocument.disabled ? 'bold' : 'normal'}"
+                                                            emptyMessage="No Records Found" (completeMethod)="filterAccount($event)" (onBlur)="accountBlur(i)" (onFocus)="accountFocus(i)" (keydown.enter)="$event.preventDefault()"> </p-autoComplete>
+                                                        <p-message severity="error" [text]="accountNoMsg" *ngIf="( ((newRFEDocument.get('acctInfo').get([i, 'account']).invalid) && (newRFEDocument.get('acctInfo').get([i, 'account']).dirty)) || ((accountNoValid) && ([accountNoPMsg]==i)) ) && (newRFEDocument.get('acctInfo').get([i, 'account']).value=='' || newRFEDocument.get('acctInfo').get([i, 'account']).value===null)"></p-message>
+                                                        <p-message severity="error" text="Incorrect Account No." *ngIf="newRFEDocument.get('acctInfo').get([i, 'account']).valid && (accountNoInValid) && ([accountNoInValidPMsg]==i)"></p-message>
+                                                        <div *ngFor="let occurance of validateAccountingTable?.accountInValidOccurance">
+                                                            <p-message severity="error" text="Incorrect Account No." *ngIf="newRFEDocument.get('acctInfo').get([i, 'account']).valid && (validateAccountingTable?.accountInValid) && (occurance==i)"></p-message>
+                                                        </div>
+                                                    </div>
+                                                    <div class="ui-lg-2 ui-md-4 ui-sm-12 ui-xs-12 ui-g-nopad pl-2">
+                                                        <div *ngIf="newRFEDocument.get('acctInfo').enabled">
+                                                            <button type="button" class="btn btn-outline-primary" (click)="accountPopup(i)">
+                                                                <i class="fa fa-search" aria-hidden="true"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="ui-g text-center">
+                                                    <div class="ui-lg-10 ui-md-8 ui-sm-12 ui-xs-12 ui-g-nopad">
+                                                        <p-autoComplete type="number" placeholder="Cost Center" formControlName="dept" [suggestions]="filterDataForCostCenter" [size]="50" [delay]="50" [inputStyle]="{'text-align': 'center','margin-top':'2px', 'margin-bottom':'2px','font-weight':newRFEDocument.disabled ? 'bold' : 'normal'}"
+                                                            emptyMessage="No Records Found" (completeMethod)="filterCostCenter($event)" (onBlur)="costCenterBlur(i)" (onFocus)="costCenterFocus(i)" (keydown.enter)="$event.preventDefault()"></p-autoComplete>
+                                                        <p-message severity="error" [text]="costCenterMsg" *ngIf="( ((newRFEDocument.get('acctInfo').get([i, 'dept']).invalid) && (newRFEDocument.get('acctInfo').get([i, 'dept']).dirty)) ||  ((costCenterValid) && ([costCenterPMsg]==i)) ) && (newRFEDocument.get('acctInfo').get([i, 'dept']).value=='' || newRFEDocument.get('acctInfo').get([i, 'dept']).value===null)"></p-message>
+                                                        <p-message severity="error" text="Incorrect Cost Center" *ngIf="newRFEDocument.get('acctInfo').get([i, 'dept']).valid && (costCenterInValid) && ([costCenterInValidPMsg]==i)"></p-message>
+                                                        <div *ngFor="let occurance of validateAccountingTable?.costCenterInValidOccurance">
+                                                            <p-message severity="error" text="Incorrect Cost Center" *ngIf="newRFEDocument.get('acctInfo').get([i, 'dept']).valid && (validateAccountingTable?.costCenterInValid) && (occurance==i)"></p-message>
+                                                        </div>
+                                                    </div>
+                                                    <div class="ui-lg-2 ui-md-4 ui-sm-12 ui-xs-12 ui-g-nopad pl-2">
+                                                        <div *ngIf="newRFEDocument.get('acctInfo').enabled">
+                                                            <button type="button" class="btn btn-outline-primary" (click)="deptPopup(i)">
+                                                                    <i class="fa fa-search" aria-hidden="true"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <input class="form-control" id="{{'wbs' + i}}" type="text" placeholder="WBS" formControlName="wbs" (keydown.enter)="$event.preventDefault()">
+                                            </td>
+                                            <td>
+                                                <input class="form-control" id="{{'distribution' + i}}" type="text" placeholder="000.00" formControlName="distribution" (blur)="distributionLeft(i)" (keyup)="distributionRegexCheck(i)" (keydown)="distributionRegexCheck(i)" (keypress)="distributionKeyPress"
+                                                    (keydown.enter)="$event.preventDefault()">
+
+                                                <p-message severity="error" [text]="distributionMsg" *ngIf="(distributionValid) && ([distributionPMsg]==i)" id="i">
+                                                </p-message>
+                                            </td>
+                                            <td>
+                                                <input class="form-control" id="{{'accountFields' + i}}" type="text" placeholder="Other Charts" formControlName="accountFields" (keydown.enter)="$event.preventDefault()">
+                                            </td>
+                                            <td class="text-center" [hidden]="isDisable || newRFEDocument.get('acctInfo').disabled">
+                                                <i *ngIf="i===0" class="fa fa-asterisk mt-2 text-danger" aria-hidden="true"></i>
+                                                <i *ngIf="i!==0" (click)="removeAcctRow(i)" class="fa fa-trash fa-2x"></i>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p-message severity="error" [text]="percentMsg" *ngIf="percentValid">
+                            </p-message>
+                        </div>
+                    </div>
+                    <!-- popup  account-->
+                    <p-dialog header="Select Account" appendTo="body" [modal]="true" [positionTop]='150' [focusOnShow]="false" [(visible)]="accountDisplay" [responsive]='true' [dismissableMask]='true' [style]="{width: '95%', height:'auto','position':'absolute'}" (onShow)="accFormDisplay.focusAccount()"
+                        (onHide)="accFormDisplay.resetForm()">
+                        <app-eidpopup [accFormDisplay]="'true'" (eventClick)="handleAccount($event)" (closeAccountNoPopup)="closeAccountNoPopup()" #accFormDisplay>
+                        </app-eidpopup>
+                    </p-dialog>
+                    <!-- popup  dept-->
+                    <p-dialog header="Select Cost Center" appendTo="body" [modal]="true" [positionTop]='150' [focusOnShow]="false" [(visible)]="deptDisplay" [responsive]='true' [dismissableMask]='true' [style]="{width: '95%', height:'auto','position':'absolute'}" (onShow)="deptFormDisplay.focusCostCenter()"
+                        (onHide)="deptFormDisplay.resetForm()">
+                        <app-eidpopup [deptFormDisplay]="'true'" (eventClick)="handleDept($event)" (closeCostCenterPopup)="closeCostCenterPopup()" #deptFormDisplay>
+                        </app-eidpopup>
+                    </p-dialog>
+
+                    <!-- Row: 8  -->
+                    <div class="ui-g mt-2">
+                        <div class="ui-g-12 ui-label" style="color:royalblue
+                            ;font-weight: bold;">
+                            Approver Name&#160;<span class="text-danger">*</span><span class="pl-2"><i class="fa fa-question-circle" aria-hidden="true" tooltip="Format: Last Name<space>First Name or Last Name alone (e.g. Smith John  / Smith). '%' can be added for wildcard search. Click Help to know more." placement="right"></i></span>
+                        </div>
+
+                        <!-- Table -->
+                        <div *ngIf="true">
+                            <!-- Buttons -->
+                            <div class="form-group ui-g p-2 mb-1" *ngIf="newRFEDocument.get('approval').enabled">
+                                <div class="ui-lg-4 ui-md-4 ui-sm-12 ui-xs-12 d-flex justify-content-start">
+                                    <button class="btn btn-outline-primary ui-sm-12" type="button" [title]="'ADD A NEW ROW'" (click)="addApprovalTable(1)">
+                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                        Add Another Row
+                                    </button>
+                                </div>
+                                <div class="ui-lg-4 ui-md-4 ui-sm-12 ui-xs-12 d-flex justify-content-center">
+                                    <div class="ui-g">
+                                        <div class="ui-lg-6 ui-md-6 ui-sm-12 ui-xs-12">
+                                            <input type="number" class="form-control ui-sm-12" placeholder="Enter no. of rows" #approvalRows (blur)="approvalMaxRows()" formControlName="approvalNumOfRows" (keyup)="approvalRowsPositiveValues()" (keydown.enter)="$event.preventDefault()">
+                                        </div>
+                                        <div class="ui-lg-6 ui-md-6 ui-sm-12 ui-xs-12">
+                                            <button class="btn btn-outline-primary ui-sm-12" type="button" (click)="addApprovalTable(approvalRows.value)">Rows to Add</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="ui-lg-4 ui-md-4 ui-sm-12 ui-xs-12 d-flex justify-content-end">
+                                    <button class="btn btn-outline-danger ui-sm-12" type="button" [title]="'REMOVE ALL'" (click)="removeApprovalTable(approval)">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                        Remove All
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-center">
+                                <table class="table table-striped table-bordered
+                                    border border-primary m-0">
+                                    <thead class="table-primary text-center">
+                                        <tr>
+                                            <th>Approver Names</th>
+                                            <th>Person Id</th>
+                                            <th [hidden]="isDisable || newRFEDocument.get('approval').disabled">Trash</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody formArrayName="approval" class="table-hover">
+                                        <tr [formGroupName]="i" *ngFor="let
+                                            tableRows of
+                                            approval.controls; let i=index; let
+                                            last=last">
+                                            <td>
+                                                <div class="ui-inputgroup">
+                                                    <span class="input-group-prepend">
+                                                        <button class="btn btn-primary" type="button" [disabled]="newRFEDocument.disabled || (newRFEDocument.get('workerInfo').disabled && newRFEDocument.get('acctInfo').disabled)" (click)="noDataForFirstLastName(); approvalNamePopup(i);" tooltip="Search pop-up" aria-label="Search pop-up">
+                                                            <i class="fa fa-external-link" aria-hidden="true"></i>
+                                                        </button>
+                                                    </span>
+                                                    <input class="form-control" id="{{'approvalName' + i}}" type="text" placeholder="LastName FirstName" formControlName="approvalName" [ngClass]="{'currentApproverIndicator' :( currentApproverIndicator && i==currentApproverIndex && currentApproverIndex!== -1 )}"
+                                                        (keydown.enter)="$event.preventDefault()" (focusout)="getApproverDetailsByUserName(newRFEDocument.get(['approval', i, 'approvalName']).value, i)" pInputText>
+                                                </div>
+                                                <p-message severity="error" [text]="approvalNameCheckMsg" *ngIf="approvalNameCheck && ([approvalPMsg]==i)"></p-message>
+                                                <p-message severity="error" [text]="approverNameNotAvailableMsg" *ngIf="!approvalNameCheck && approverNameNotAvailable && ([approvalPMsg]==i)">
+                                                </p-message>
+                                            </td>
+                                            <td>
+                                                <input class="form-control" readonly id="{{'personId' + i}}" type="text" placeholder="Person Id" formControlName="personId" [ngClass]="{'currentApproverIndicator' :( currentApproverIndicator && i==currentApproverIndex && currentApproverIndex!== -1 )}">
+                                            </td>
+                                            <td class="text-center" [hidden]="isDisable || newRFEDocument.get('approval').disabled">
+                                                <i *ngIf="i===0 && (newRFEDocument.get('approval').get([0, 'approvalName']).value=='' || newRFEDocument.get('approval').get([0, 'approvalName']).value==null)" class="fa fa-asterisk mt-2 text-danger" aria-hidden="true"></i>
+                                                <i *ngIf="i!==0 || (newRFEDocument.get('approval').get([0, 'approvalName']).value!='' && newRFEDocument.get('approval').get([0, 'approvalName']).value!=null)" (click)="removeApprovalRow(i)" class="fa fa-trash fa-2x"></i>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p-message severity="error" [text]="approvalRowsToAddMsg" *ngIf="approvalRowsToAddValid">
+                            </p-message>
+                            <p-message severity="error"  [text]="approvalMsg"  *ngIf="(!isDisable) && (((approvalValid)&&(newRFEDocument.get('approval').get([0]).invalid)) || approverLimitValid)">
+                                </p-message>
+                        </div>
+
+                    </div>
+
+                    <!-- popup  -->
+                    <p-dialog header="Select Approver Names" appendTo="body" [modal]="true" [positionTop]='150' [focusOnShow]="false" [(visible)]="approvalNameDisplay" [responsive]='true' [dismissableMask]='true' [style]="{width: '95%', height:'auto','position':'absolute'}"
+                        (onShow)="commonFormDisplayApprover.focusLastName(); commonFormDisplayApprover.populateApproverNames(userLastName, userFirstName);" (onHide)="commonFormDisplayApprover.resetForm(); closeApprovalPopup();">
+                        <app-eidpopup [commonFormDisplay]="'true'" [approvarPopup]="'true'" (eventClick)="handleApproval($event)" (closePopup)="closePopup(); closeApprovalPopup();" #commonFormDisplayApprover>
+                        </app-eidpopup>
+                    </p-dialog>
+
+                    <!-- Row: 9  -->
+                    <div class="ui-g mt-2">
+                        <div class="ui-g-12 ui-label" style="color:royalblue
+                            ;font-weight: bold;">
+                            Informational Copy<span class="pl-2"><i class="fa fa-question-circle" aria-hidden="true" tooltip="Format: Last Name<space>First Name or Last Name alone (e.g. Smith John  / Smith). '%' can be added for wildcard search. Click Help to know more." placement="right"></i></span>
+                        </div>
+
+                        <!-- Table -->
+                        <div *ngIf="true">
+                            <!-- Buttons -->
+                            <div class="form-group ui-g p-2 mb-1" *ngIf="newRFEDocument.get('informationalCopy').enabled || adminEditUpdateAddRowButtonShow">
+                                <div class="ui-lg-4 ui-md-4 ui-sm-12 ui-xs-12 d-flex justify-content-start">
+                                    <button class="btn btn-outline-primary ui-sm-12" type="button" [title]="'ADD A NEW ROW'" (click)="addInfoTable(1)">
+                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                        Add Another Row
+                                    </button>
+                                </div>
+                                <div class="ui-lg-4 ui-md-4 ui-sm-12 ui-xs-12 d-flex justify-content-center">
+                                    <div class="ui-g">
+                                        <div class="ui-lg-6 ui-md-6 ui-sm-12 ui-xs-12">
+                                            <input type="number" class="form-control ui-sm-12" placeholder="Enter no. of rows" #infoRows (blur)="infoMaxRows()" formControlName="infoCopyNumOfRows" (keyup)="infoCopyRowsPositiveValues()" (keydown.enter)="$event.preventDefault()">
+                                        </div>
+                                        <div class="ui-lg-6 ui-md-6 ui-sm-12 ui-xs-12">
+                                            <button class="btn btn-outline-primary ui-sm-12" type="button" (click)="addInfoTable(infoRows.value)" [disabled]="isEditSaveApprovedForm">Rows to Add</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="ui-lg-4 ui-md-4 ui-sm-12 ui-xs-12 d-flex justify-content-end">
+                                    <button class="btn btn-outline-danger ui-sm-12" type="button" [title]="'REMOVE ALL'" (click)="removeInfoTable(informationalCopy)" [disabled]="isEditSaveApprovedForm">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                        Remove All
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-center">
+                                <table class="table table-striped table-bordered
+                                    border border-primary">
+                                    <thead class="table-primary text-center">
+                                        <tr>
+                                            <th>Names</th>
+                                            <th>Person Id</th>
+                                            <th [hidden]="isDisable">Trash</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody formArrayName="informationalCopy" class="table-hover">
+                                        <tr [formGroupName]="i" *ngFor="let
+                                            tableRows of
+                                            informationalCopy.controls; let
+                                            i=index; let last=last">
+                                            <td>
+                                                <div class="ui-inputgroup">
+                                                    <span class="input-group-prepend">
+                                                        <button class="btn btn-primary" type="button" [disabled]="newRFEDocument.get(['informationalCopy', i]).disabled || newRFEDocument.get('informationalCopy').disabled" (click)="noDataForFirstLastName(); informationPopup(i);" tooltip="Search pop-up" aria-label="Search pop-up">
+                                                            <i class="fa fa-external-link" aria-hidden="true"></i>
+                                                        </button>
+                                                    </span>
+                                                    <input class="form-control" id="{{'infoName' + i}}" type="text" placeholder="LastName FirstName" formControlName="infoName" (keydown.enter)="$event.preventDefault()" (focusout)="getDetailsByUserName(newRFEDocument.get(['informationalCopy', i, 'infoName']).value, 'infoName', i)"
+                                                        pInputText>
+                                                </div>
+                                                <p-message severity="error" [text]="inforNameNotAvailableMsg" *ngIf="inforNameNotAvailable && ([infoMsgIndex]==i)">
+                                                </p-message>
+                                            </td>
+                                            <td>
+                                                <input class="form-control" readonly id="{{'infoPersonId' + i}}" type="text" placeholder="Person Id" formControlName="infoPersonId">
+                                            </td>
+                                            <td class="text-center" [hidden]="isDisable">
+                                                <div *ngIf="isEditSaveApprovedForm; then infoCopyDeleteThenBlock; else infoCopyDeleteElseBlock"></div>
+                                                <ng-template #infoCopyDeleteThenBlock>
+                                                    <div *ngIf="( i===0 && (newRFEDocument.get('informationalCopy').get([0, 'infoName']).value=='' || newRFEDocument.get('informationalCopy').get([0, 'infoName']).value==null) ) && newRFEDocument.get(['informationalCopy', 0]).enabled" class="mt-2">Optional</div>
+                                                    <div *ngIf="(newRFEDocument.get('informationalCopy').get([i, 'infoName']).value!='' && newRFEDocument.get('informationalCopy').get([i, 'infoName']).value!=null) && newRFEDocument.get(['informationalCopy', i]).disabled" class="mt-2">Cannot Remove</div>
+                                                    <i *ngIf="( i!==0 || (newRFEDocument.get('informationalCopy').get([0, 'infoName']).value!='' && newRFEDocument.get('informationalCopy').get([0, 'infoName']).value!=null) ) && newRFEDocument.get(['informationalCopy', i]).enabled" (click)="removeInfoRow(i)"
+                                                        class="fa fa-trash fa-2x"></i>
+                                                </ng-template>
+                                                <ng-template #infoCopyDeleteElseBlock>
+                                                    <div *ngIf="i===0 && (newRFEDocument.get('informationalCopy').get([0, 'infoName']).value=='' || newRFEDocument.get('informationalCopy').get([0, 'infoName']).value==null)" class="mt-2">Optional</div>
+                                                    <i *ngIf="i!==0 || (newRFEDocument.get('informationalCopy').get([0, 'infoName']).value!='' && newRFEDocument.get('informationalCopy').get([0, 'infoName']).value!=null)" (click)="removeInfoRow(i)" class="fa fa-trash fa-2x"></i>
+                                                </ng-template>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p-message severity="error" [text]="infoMsg" *ngIf="infoValid">
+                            </p-message>
+                        </div>
+
+                    </div>
+
+                    <!-- popup information  -->
+                    <p-dialog header="Select Informational Copy Name" appendTo="body" [modal]="true" [positionTop]='150' [focusOnShow]="false" [(visible)]="informationalDisplay" [responsive]='true' [dismissableMask]='true' [style]="{width: '95%', height: 'auto','position':'absolute'}"
+                        (onShow)="commonFormDisplayInfoCopy.focusLastName(); commonFormDisplayInfoCopy.populateNames(userLastName, userFirstName);" (onHide)="commonFormDisplayInfoCopy.resetForm(); closeInformationalCopyPopUp();">
+                        <app-eidpopup [commonFormDisplay]="'true'" (eventClick)="handleInformation($event)" (closePopup)="closePopup(); closeInformationalCopyPopUp();" #commonFormDisplayInfoCopy>
+                        </app-eidpopup>
+                    </p-dialog>
+
+                    <!-- Row: 10 -->
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-label" style="color:royalblue
+                            ;font-weight: bold;">
+                            Comments
+                        </div>
+                        <textarea rows="4" cols="150" formControlName="comments" autoResize="autoResize" pInputTextarea></textarea>
+                    </div>
+
+                    <div class="ui-g p-2">
+                        <div class="ui-g-12 ui-label">
+                            <h4>Upload File</h4>
+                        </div>
+                        <div class="ui-g-6 ui-md-8 ui-lg-6 mb-3">
+                            <p-fileUpload #uploader name="files[]" [disabled]="newRFEDocument.get('workerInfo').disabled&&newRFEDocument.get('acctInfo').disabled&&newRFEDocument.get('approval').disabled" [showUploadButton]="false" accept="image/*,.doc, .docx,.xlsx,.xls,.ppt, .pptx,.txt,.pdf,.zip,.msg"
+                                (onSelect)="onFileUpload($event)" (onRemove)="onFileRemove($event)" (onClear)="onAllFileClear()" multiple="multiple" maxFileSize="50000000" chooseLabel="Browse" (onError)="onFileError($event)">
+                            </p-fileUpload>
+                        </div>
+                        <div class="ui-g-6 ui-md-8 ui-lg-6 mb-3" [hidden]="isRenewalForm">
+                            <div *ngFor="let attachment of attachments;let ind = index">
+                                {{attachment.fileName}}
+                                <i class="pi pi-download" (click)="downloadFile(corpReqNum,attachment.fileName)" style="font-size: 17px;cursor:pointer;color:#1f89ce;"></i>
+                                <i class="pi pi-trash" [hidden]="isDisable" (click)="deleteFile(attachment.corpAttachmentId,ind)" style="font-size: 17px;cursor:pointer;color:#1f89ce;"></i>
+                            </div>
+                        </div>
+                        <div class="ui-g-6 ui-md-8 ui-lg-6 mb-3" [hidden]="!isRenewalForm">
+                            <div *ngFor="let attachment of renewalAttachments;let ind = index">
+                                {{attachment.fileName}}
+                                <i class="pi pi-download" (click)="downloadFile(oldCorpReqNum,attachment.fileName)" style="font-size: 17px;cursor:pointer;color:#1f89ce;"></i>
+                                <i class="pi pi-trash" [hidden]="isDisable" (click)="deleteRenewalAttachment(attachment.corpAttachmentId,ind)" style="font-size: 17px;cursor:pointer;color:#1f89ce;"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row:12 -->
+                    <p-table [columns]="cols" [value]="logs" [responsive]="true" [paginator]="true" [rows]="15">
+                        <ng-template pTemplate="caption">
+                            <div>
+                                <div style="text-align:left">
+                                    Activity Logs
+                                </div>
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="header" let-columns>
+                            <tr class="text-center">
+                                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                    {{col.header}}
+                                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-rowData let-columns="columns">
+                            <tr [pSelectableRow]="rowData" class="text-center">
+                                <td *ngFor="let col of columns">
+                                    {{rowData[col.field]}}
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                    <!-- Submit -->
+                    <div class="ui-g p-4">
+                        <div class="ui-lg-1 ui-md-0"></div>
+                        <div class="ui-lg-10 ui-md-12 ui-sm-12 ui-xs-12">
+                            <div class="ui-g justify-content-center">
+
+                                <div class="ui-lg-1 ui-md-1 ui-sm-12 ui-xs-12 custom-button-width-cws" *ngIf="isClosable">
+                                    <button type="button" class="btn btn-primary ui-md-12 ui-sm-12 ui-xs-12" (click)="closeWithoutSaving()">
+                                    <i class="fa fa-close" aria-hidden="true"></i>&#160;Close Without Saving</button>
+                                </div>
+
+                                <div class="ui-lg-1 ui-md-1 ui-sm-12 ui-xs-12 custom-button-width-epu" *ngIf="!(!isEditable||!isDisable)">
+                                    <button type="button" class="btn btn-primary ui-md-12 ui-sm-12 ui-xs-12" (click)="edit(isEditSaveApprovedForm)">
+                                    <i class="fa fa-edit" aria-hidden="true"></i>&#160;Edit</button>
+                                </div>
+
+                                <div class="ui-lg-1 ui-md-1 ui-sm-12 ui-xs-12 custom-button-width-epu" *ngIf="isEditSaveApprovedForm">
+                                    <button type="submit" class="btn btn-primary ui-md-12 ui-sm-12 ui-xs-12" (click)="saveAsDraft(newRFEDocument,corpResults, true)" [disabled]="!adminEditUpdateAddRowButtonShow">
+                                            <i class="fa fa-refresh" aria-hidden="true"></i>&#160;Update</button>
+                                </div>
+
+                                <div class="ui-lg-1 ui-md-1 ui-sm-12 ui-xs-12 custom-button-width-sad" *ngIf="isSave">
+                                    <button type="submit" class="btn btn-primary ui-md-12 ui-sm-12 ui-xs-12" (click)="saveAsDraft(newRFEDocument,corpResults, false)">
+                                    <i class="fa fa-save" aria-hidden="true"></i>&#160;Save As Draft</button>
+                                </div>
+
+                                <div class="ui-lg-1 ui-md-1 ui-sm-12 ui-xs-12 custom-button-width-many" *ngIf="!isRetract">
+                                    <button type="submit" class="btn btn-primary ui-md-12 ui-sm-12 ui-xs-12" (click)="retractAction(formData)">
+                                    <i class="fa fa-undo" aria-hidden="true"></i>&#160;Retract</button>
+                                </div>
+
+                                <div class="ui-lg-1 ui-md-1 ui-sm-12 ui-xs-12 custom-button-width-many" *ngIf="isSubmit">
+                                    <button type="submit" class="btn btn-primary ui-md-12 ui-sm-12 ui-xs-12" (click)="submitForm(newRFEDocument,corpResults)">
+                                    <i class="fa fa-save" aria-hidden="true"></i>&#160;Submit</button>
+                                </div>
+
+                                <div class="ui-lg-1 ui-md-1 ui-sm-12 ui-xs-12 custom-button-width-many" *ngIf="isApprover">
+                                    <button type="submit" class="btn btn-primary ui-md-12 ui-sm-12 ui-xs-12" (click)="approveDisplay=true">
+                                    <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>&#160;Approve</button>
+                                </div>
+
+                                <div class="ui-lg-1 ui-md-1 ui-sm-12 ui-xs-12 custom-button-width-many" *ngIf="isApprover">
+                                    <button type="submit" class="btn btn-primary ui-md-12 ui-sm-12 ui-xs-12" (click)="rejectDisplay=true">
+                                    <i class="fa fa-thumbs-o-down" aria-hidden="true"></i>&#160;Reject</button>
+                                </div>
+
+                                <div class="ui-lg-1 ui-md-1 ui-sm-12 ui-xs-12 custom-button-width-vac" *ngIf="isComments">
+                                    <button type="button" class="btn btn-primary ui-md-12 ui-sm-12 ui-xs-12" (click)="commentsDisplay=!commentsDisplay">
+                                    <i class="fa fa-comments-o" aria-hidden="true"></i>&#160;View Approver Comments</button>
+                                </div>
+
+                                <div class="ui-lg-1 ui-md-1 ui-sm-12 ui-xs-12 custom-button-width-many" *ngIf="!isRenewal">
+                                    <button type="submit" class="btn btn-primary ui-md-12 ui-sm-12 ui-xs-12" (click)="renewalDisplay=true">
+                                    <i class="fa fa-refresh" aria-hidden="true"></i>&#160;Renewal</button>
+                                </div>
+
+                                <div class="ui-lg-1 ui-md-1 ui-sm-12 ui-xs-12 custom-button-width-epu" *ngIf="isPrintable">
+                                    <button type="button" class="btn btn-primary ui-md-12 ui-sm-12 ui-xs-12" (click)='confirmPrint()'>
+                                    <i class="fa fa-print" aria-hidden="true"></i>&#160;Print</button>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="ui-lg-1 ui-md-0"></div>
+                    </div>
+
+                    <!-- Required field popup -->
+                    <p-dialog header="Form errors on submission." appendTo="body" [modal]="true" [(visible)]="requiredFullPop" [responsive]='true' [closable]='false' [style]="{width: '600px', minWidth: '300px'}" [minY]="70" [maximizable]="true" [baseZIndex]="10000">
+                        <app-error-popup [savedAsDraftRequiredPopup]="savedAsDraftRequiredPopup" [specificErrorMessagesContainer]="specificErrorMessagesContainer" (eventClick)="closeRequiredPopup()"></app-error-popup>
+                    </p-dialog>
+
+                    <!-- Print confirmation -->
+                    <p-dialog header="Print Confirmation" appendTo="body" [modal]="true" [(visible)]="confirmPrintPopup" [responsive]='true' [closable]='false' [style]="{width: '600px', minWidth: '300px'}" [minY]="70" [maximizable]="true" [baseZIndex]="10000">
+                        <div class="ui-g m-3" style="border: 1px solid rgb(31, 179, 238); border-radius: 5px; background-image: linear-gradient(to left, white, #ADD8E6); padding: 15px;">
+                            <div class="ui-lg-12 ui-md-12 ui-sm-12 ui-xm-12">
+                                <h6>This form is not Saved As Draft/Submitted, your data might be lost in some cases if you Print before saving (Files selected for upload will not be retained anyway).</h6>
+                            </div>
+                            <div class="ui-lg-12 ui-md-12 ui-sm-12 ui-xm-12">
+                                <small>Recommendation: Please Save it as draft before printing.</small>
+                                <br>
+                                <small>Note: Print functionality without saving is not deprecated.</small>
+                            </div>
+                            <div class="ui-lg-12 ui-md-12 ui-sm-12 ui-xm-12">
+                                <h6>Do you wish to continue anyway?</h6>
+                            </div>
+                        </div>
+                        <p-footer>
+                            <button type="button" class="btn btn-outline-primary m-2" (click)="print()"><i class="fa fa-check" aria-hidden="true"></i>&#160;Yes</button>
+                            <button type="button" class="btn btn-danger m-2" (click)="cancelPrint()"><i class="fa fa-times" aria-hidden="true"></i>&#160;No</button>
+                        </p-footer>
+                    </p-dialog>
+
+                </form>
+            </div>
+
+            <p-footer>
+
+            </p-footer>
+
+        </p-card>
+
+    </div>
+</div>
