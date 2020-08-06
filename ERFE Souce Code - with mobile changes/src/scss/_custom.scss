@@ -1,0 +1,257 @@
+.error {
+  color: #d00;
+}
+
+.form-group.required .col-form-label:after {
+  color: #d00;
+  font-family: 'FontAwesome';
+  font-weight: normal;
+  font-size: 0.95rem;
+  content: "\f00c";
+  margin-left: 4px;
+}
+
+.page-layout {
+  margin-right: 20px;
+}
+
+.col-form-label {
+  font-weight: 600;
+  padding-bottom: 0.01rem;
+  padding-top: 0.01rem;
+  font-size: 0.95rem;
+}
+
+.form-control {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+.form-group {
+  margin-bottom: 0.2rem;
+}
+
+.card-header {
+  font-weight: 600;
+  font-size: large;
+}
+
+.checkbox-control-form {
+  display: block;
+  width: 100%;
+  padding: 0.2rem 0 0 0.75rem;
+}
+
+.default-checkbox-control-form {
+  display: block;
+  width: 100%;
+  padding: 0.30rem 0 0 0.75rem;
+}
+
+//.ui-widget-header {
+//  background: $header-table-background-color;
+//}
+
+.mat-checkbox-label {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.list-group-item-info {
+  color: black;
+  font-weight: 600;
+  padding: 0.5rem 1.25rem;
+}
+
+.multi-select {
+  width: 100%;
+  line-height: 1.15;
+}
+
+.btn-primary {
+  background-color: #0275d8;
+  margin: 0 0 2px 2px;
+}
+
+.alert {
+  color: black;
+}
+
+.table-selection {
+  background-color: #ffef8f;
+}
+
+.ui-editor-toolbar {
+  background: whitesmoke;
+}
+
+.ui-datatable .ui-datatable-data > tr > td {
+  padding: .15em .3em;
+  border-width: 2px;
+}
+
+.table td {
+  padding: 0.2rem;
+}
+
+.table th {
+  padding: 0.2rem;
+}
+
+.ui-widget {
+  font-family: "Roboto", "Trebuchet MS", Arial, Helvetica, sans-serif;
+  font-size: 0.85rem;
+}
+
+.ui-state-default {
+  color: black;
+}
+
+dl.inline {
+  display: flex;
+  flex-flow: row;
+  flex-wrap: wrap;
+  overflow: visible;
+  margin-bottom: 0;
+}
+
+dl.inline dt {
+  flex: 0 0 50%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+dl.inline dd {
+  flex: 0 0 50%;
+  margin-left: auto;
+  text-align: left;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 0.4rem 1.25rem;
+}
+
+.card-title {
+  margin-bottom: 0;
+}
+
+.ui-state-active {
+  background: #d7ebf9;
+  border-radius: 0;
+}
+
+.ui-state-active a {
+  color: #777777;
+  text-decoration: none;
+  border: none;
+}
+
+.ui-state-default {
+  border-radius: 0;
+  border: 1px solid #c0c0c0;
+}
+
+.ui-state-default a {
+  color: black;
+  text-decoration: none;
+}
+
+.ui-datatable th {
+  background: $header-table-background-color;
+}
+
+.ui-column-title {
+  float: left;
+}
+
+.handle {
+  background-color: #0275d8 !important;
+}
+
+.ui-tabview .ui-state-active {
+  background: #92cff8;
+}
+
+.ui-tabview .ui-corner-all {
+  border-radius: 3px;
+}
+
+.project-header {
+  background-color: #a87aff !important;
+  color: black !important;
+  text-align: center;
+  font-weight: 600;
+}
+
+.schedule-header {
+  color: black !important;
+  text-align: center;
+  font-weight: 600;
+  white-space: normal !important;
+}
+
+.budget-header {
+  background-color: #00bf8f !important;
+  color: black !important;
+  text-align: center;
+  font-weight: 600;
+  white-space: normal !important;
+}
+
+.ui-datatable-odd {
+  background: lightgrey;
+}
+
+.dashboard-wrap {
+  white-space: normal !important;
+}
+
+.dashboard-nowrap {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card.accordion,
+.card.accordion .card-header,
+.panel.accordion {
+  background-color: #d7ebf9;
+  color: black;
+}
+
+.panel.accordion .panel-body {
+  background-color: #fff;
+}
+
+.url-link {
+  color: #fff !important;
+  cursor: pointer;
+}
+
+.link {
+  color: #2779aa !important;
+  cursor: pointer;
+}
+
+.form-control:focus {
+  border-color: #80bdff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(9, 108, 230, 1) !important;
+}
+
+.multi-select-dashboard {
+  padding: .45em .0em .0em .0em;
+  width: 100%;
+  background: white;
+  color: black;
+  line-height: .6em;
+}
+
+@import url(print.css) print;
+
+.tabActiveClass .active {
+  border-color: #80bdff !important;
+  border-bottom-color: #fff !important;
+}

@@ -1,0 +1,61 @@
+.menu-button {
+    right: 0px;
+}
+
+.navbar-toggler {
+    color: #000;
+    position: relative;
+    top: 0;
+    left: 0;
+    width: auto;
+    height: inherit;
+}
+
+.navbar-nav {
+    position: relative;
+}
+
+.menu-item {
+    font-weight: bold;
+    font-size: 130%;
+    width: auto;
+}
+
+.nav-item {
+    font-weight: normal;
+    font-size: medium;
+}
+
+.menu-item-separator {
+    color: #000;
+    min-width: 20px !important;
+}
+
+.nav-link,
+.nav-link:link,
+.nav-link:hover,
+.nav-link:visited,
+.nav-link:active {
+    color: #000;
+    padding: .1em .5em;
+}
+
+.toolbar {
+    height: 50px;
+    //background-image:url(../../../assets/img/Mesh_Header_Blue-LightBlue.png)!important;
+    background-color: #d7ebf9 !important;
+    color: #000;
+    padding: 0 0;
+}
+
+.logo-spacing {
+    padding-bottom: 4px;
+    margin-left: 4px;
+}
+
+.shadow {
+    -webkit-box-shadow: 0 8px 6px -6px #999;
+    -moz-box-shadow: 0 8px 6px -6px #999;
+    box-shadow: 0 8px 6px -6px #999;
+    /* the rest of your styling */
+}
