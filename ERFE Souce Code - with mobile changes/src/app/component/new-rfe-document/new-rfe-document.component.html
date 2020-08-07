@@ -105,7 +105,8 @@
                                         <br/>
                                         <i>{{ newRFEDocument.get('siteContactName').value }}</i>
                                     </h6>
-                                    <h6><strong>Project Coordinator Name:</strong>
+                                    <h6 *ngIf="newRFEDocument.get('projectCoordinator').value">
+                                        <strong>Project Coordinator Name:</strong>
                                         <br/>
                                         <i>{{ newRFEDocument.get('projectCoordinator').value }}</i>
                                     </h6>

@@ -12,10 +12,10 @@ export const routes: Routes = [
     redirectTo: '/dashboard',
     pathMatch: 'full',
   },
-  // {
-  //   path: 'login',
-  //   loadChildren: './component/login/login.module#LoginModule'
-  // },
+  {
+    path: 'login',
+    loadChildren: './component/login/login.module#LoginModule'
+  },
   {
     path: 'dashboard',
     loadChildren: './component/dashboard/dashboard.module#DashboardModule',

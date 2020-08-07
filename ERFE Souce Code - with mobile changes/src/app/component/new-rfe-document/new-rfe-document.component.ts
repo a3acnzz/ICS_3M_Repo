@@ -1456,8 +1456,6 @@ export class NewRFEDocumentComponent implements OnInit, OnDestroy {
             this.newRFEDocument.disable();
 
         this.setMaxMinDate();
-
-        // console.log(this.newRFEDocument.get('approval').get('controls'))
     }
 
 
