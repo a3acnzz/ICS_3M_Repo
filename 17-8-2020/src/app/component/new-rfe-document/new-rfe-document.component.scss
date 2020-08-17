@@ -1,0 +1,120 @@
+.headerlabel {
+    color: rgb(255, 255, 255);
+    font: 20px arial;
+    list-style: height 30px;
+    text-align: left;
+    line-height: 60px;
+    font-size: 25px;
+    padding-left: 15px;
+}
+
+.ng-star-inserted {
+    width: 100%;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input {
+    text-align: center;
+    font-size: 16px;
+    color: black;
+}
+
+.ui-label {
+    font-size: 16px;
+    color: black;
+}
+
+.currentApproverIndicator {
+    background-image: linear-gradient(to left, #bbdefb, #bbdefb, #bbdefb, #bbdefb, royalblue);
+    color: black;
+    font-weight: bold;
+    border: 2px solid black;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.currentApproverIndicatorForMobile {
+    color: #007bff !important;
+}
+
+// Buttons At Bottom
+.custom-button-width-cws {
+    width: 20%;
+}
+
+.custom-button-width-epu {
+    width: 10%;
+}
+
+.custom-button-width-sad {
+    width: 16%;
+}
+
+.custom-button-width-vac {
+    width: 22%;
+}
+
+.custom-button-width-many {
+    width: 12%;
+}
+
+// Laptops
+@media only screen and (max-width: 1400px) {
+    .custom-button-width-cws {
+        width: 30%;
+    }
+    .custom-button-width-epu {
+        width: 15%;
+    }
+    .custom-button-width-sad {
+        width: 20%;
+    }
+    .custom-button-width-vac {
+        width: 30%;
+    }
+    .custom-button-width-many {
+        width: 15%;
+    }
+}
+
+// Tablets
+@media only screen and (max-width: 768px) {
+    .custom-button-width-cws {
+        width: 35%;
+    }
+    .custom-button-width-epu {
+        width: 15%;
+    }
+    .custom-button-width-sad {
+        width: 25%;
+    }
+    .custom-button-width-vac {
+        width: 40%;
+    }
+    .custom-button-width-many {
+        width: 20%;
+    }
+}
+
+// Mobile phones
+@media only screen and (max-width: 600px) {
+    .custom-button-width-cws {
+        width: 100%;
+    }
+    .custom-button-width-epu {
+        width: 100%;
+    }
+    .custom-button-width-sad {
+        width: 100%;
+    }
+    .custom-button-width-vac {
+        width: 100%;
+    }
+    .custom-button-width-many {
+        width: 100%;
+    }
+}
