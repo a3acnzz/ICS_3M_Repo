@@ -1,0 +1,284 @@
+<div class="row d-flex justify-content-center">
+    <div class="col-md-11 pt-5 pb-5">
+        <div [ngBusy]="{busy:busyLoading, message:loadingMessage}"></div>
+
+        <!-- Main card -->
+        <p-card class="ui-card" [style]="{'border':'2px solid #3366ff'}">
+            <p-header>
+                <div class="text-center" style="background-color:white;background-image:url(../../../../assets/img/Mesh_Header_Blue-LightBlue.png);background-size:
+                            contain; font-weight: bold; line-height: 40px;">
+                    <div class="ui-g">
+                        <div class="ui-g-10 headerlabel">Search</div>
+                    </div>
+                </div>
+            </p-header>
+
+            <!-- Main content -->
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <!-- <alert *ngFor="let alert of alerts;let i = index" [type]="alert.type" dismissible="true" (close)="alerts = [];">
+                        {{ alert?.msg }}
+                    </alert> -->
+
+                    <form [formGroup]="searchForm" (ngSubmit)="searchCorpHwSwRecords()">
+
+                        <!-- Wild Card Information -->
+                        <p-dialog position="topright" header="How to use a wildcard search?" appendTo="body" [modal]="true" [(visible)]="wildCardPopup" [responsive]='true' [closable]='false' [style]="{width: '600px', minWidth: '300px'}" [minY]="70" [maximizable]="true" [baseZIndex]="10000">
+                            <div class="ui-g m-3" style="border: 1px solid rgb(31, 179, 238); border-radius: 5px; background-image: linear-gradient(to left, white, #ADD8E6); padding: 15px;">
+                                <div class="ui-lg-12 ui-md-12 ui-sm-12 ui-xm-12">
+                                    <h6 class="mb-0">Wildcards are used in search terms to represent one or more other characters. "%" = Represents zero or more characters.</h6>
+                                </div>
+                                <div class="ui-lg-12 ui-md-12 ui-sm-12 ui-xm-12">
+                                    <table class="table table-bordered">
+                                        <thead class="thead-dark text-center">
+                                            <tr>
+                                                <th scope="col">Search</th>
+                                                <th scope="col">Description</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row" class="text-center">a%</th>
+                                                <td>Finds any values that starts with "a"</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row" class="text-center">%a</th>
+                                                <td>Finds any values that ends with "a"</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row" class="text-center">%or%</th>
+                                                <td>Finds any values that have "or" in any position</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row" class="text-center">a%o</th>
+                                                <td>Finds any values that starts with "a" and ends with "o"</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="ui-lg-12 ui-md-12 ui-sm-12 ui-xm-12 pt-0">
+                                    <h6>Contact and Supplier fields support wildcard searches. If "%" is not added then the system performs "%input%" by default.</h6>
+                                </div>
+                            </div>
+                            <p-footer>
+                                <button type="button" class="btn btn-outline-primary m-2" (click)="wildCardPopup = !wildCardPopup"><i class="fa fa-check" aria-hidden="true"></i>&#160;All right</button>
+                            </p-footer>
+                        </p-dialog>
+
+
+                        <!-- Row 1 -->
+                        <div class="ui-g">
+                            <!-- Wild card information -->
+                            <div class="ui-g-12 ui-md-12 ui-lg-12" style="text-align: right;">
+                                <button type="button" class="btn btn-outline-info btn-sm" (click)="wildCardPopup = !wildCardPopup">How to use a wildcard search?</button>
+                            </div>
+                            <!-- Error message : try to use alert if possible -->
+                            <div class="ui-g-12 ui-md-12 ui-lg-12" style="text-align: center;" *ngIf="noValue">
+                                <p-message severity="error" text="At least one of the field is required for search."></p-message>
+                            </div>
+                            <div class="ui-g-12 ui-md-12 ui-lg-12" style="text-align: center;" *ngIf="contactNameNotAvailable">
+                                <p-message severity="info" text="Contact Name either does not match the format or does not exist. So auto-population was not done. Yet the search operation can be performed.">
+                                </p-message>
+                            </div>
+
+                            <!-- Contact -->
+                            <div class="ui-lg-3 ui-md-6 ui-sm-12 ui-xs-12 p-2">
+                                <h6>Contact<span class="pl-2"><i class="fa fa-question-circle" aria-hidden="true" tooltip="Format for auto-population: Last Name<space>First Name or Last Name alone (e.g. Smith John  / Smith). '%' can be added for wildcard search." placement="right"></i></span></h6>
+                                <div class="ui-inputgroup">
+                                    <span class="input-group-prepend">
+                                        <button class="btn btn-sm btn-primary m-0" type="button" [disabled]="contactButtonDisabled" (click)="contactPopupWithUpdatedNames(searchForm.get('contact').value)" tooltip="Search pop-up" aria-label="Search pop-up">
+                                            <i class="fa fa-external-link" aria-hidden="true"></i>
+                                        </button>
+                                    </span>
+                                    <input type="text" class="form-control form-control-sm" name="contact" id="contact" placeholder="Contact" formControlName="contact" (keydown.Tab)="getDetailsByUserName(searchForm.get('contact').value, 'external')" (focusin)="contactTabOutPerformed = false; contactButtonDisabled = false;"
+                                        pInputText #contact>
+                                </div>
+                                <!-- popup -->
+                                <!-- <p-dialog header="Select Contact Name" appendTo="body" [modal]="true" [positionTop]='150' [focusOnShow]="false" [(visible)]="contactDisplay" [responsive]='true' [dismissableMask]='true' [style]="{width: '95%', height: 'auto','position':'absolute'}" (onShow)="commonFormDisplayForContact.focusLastName(); commonFormDisplayForContact.populateNames(userLastName, userFirstName);"
+                                    (onHide)="commonFormDisplayForContact.resetForm()">
+                                    <app-eidpopup [commonFormDisplay]="'true'" (eventClick)="handleContact($event)" (closePopup)="closeContactPopup()" #commonFormDisplayForContact>
+                                    </app-eidpopup>
+                                </p-dialog> -->
+                            </div>
+
+                            <!-- Supplier -->
+                            <div class="ui-lg-3 ui-md-6 ui-sm-12 ui-xs-12 p-2">
+                                <h6>Supplier<span class="pl-2"><i class="fa fa-question-circle" aria-hidden="true" tooltip="Start typing the supplier name and tab out. '%' can be added for wildcard search. Click Help to know more." placement="right"></i></span></h6>
+                                <div class="ui-inputgroup">
+                                    <span class="input-group-prepend">
+                                        <button class="btn btn-sm btn-primary m-0" type="button" [disabled]="supplierButtonDisabled" (click)="supplierPopup()" tooltip="Search pop-up" aria-label="Search pop-up">
+                                            <i class="fa fa-external-link" aria-hidden="true"></i>
+                                        </button>
+                                    </span>
+                                    <input type="text" class="form-control form-control-sm" id="supplier" name="supplier" placeholder="Supplier" formControlName="supplier" (keydown.Tab)="getDetailsBySupplierName(searchForm.get('supplier').value, 'external')" (focusin)="supplierTabOutPerformed = false; supplierButtonDisabled = false;"
+                                        pInputText>
+                                </div>
+                                <p-message severity="error" [text]="supplierNameNotAvailableMsg" *ngIf="supplierNameNotAvailable">
+                                </p-message>
+                                <!-- popup -->
+                                <!-- <p-dialog header="Select a Supplier" appendTo="body" [modal]="true" [positionTop]='150' [focusOnShow]="false" [(visible)]="orderDisplay" [responsive]='true' [dismissableMask]='true' [style]="{width: '95%', height: 'auto', position:'absolute'}" (onShow)="orderFromDisplay.focusSupplierName(); orderFromDisplay.populateSupplierName(searchForm.get('supplier').value);"
+                                    (onHide)="orderFromDisplay.resetForm();">
+                                    <app-eidpopup [orderFormDisplay]="'true'" (eventClick)="handleOrder($event)" (closeOrderFromPopup)="closeOrderFromPopup()" #orderFromDisplay>
+                                    </app-eidpopup>
+                                </p-dialog> -->
+                            </div>
+
+                            <!-- HS Request Number -->
+                            <div class="ui-lg-3 ui-md-6 ui-sm-12 ui-xs-12 p-2">
+                                <h6>HW/SW Request Number</h6>
+                                <input type="text" class="form-control form-control-sm" id="hwSwRequestNumber" name="hwSwRequestNumber" placeholder="HW/SW Request Number" formControlName="hwSwRequestNumber" (change)="checkValid()" pInputText>
+                            </div>
+
+                            <!-- Used For -->
+                            <div class="ui-lg-3 ui-md-6 ui-sm-12 ui-xs-12 p-2">
+                                <h6>Used For</h6>
+                                <p-dropdown [style]="{width:'100%', height: 'auto'}" [options]="usedFor" id="usedFor" name="usedFor" editable="true" placeholder="Used For" formControlName="usedFor">
+                                </p-dropdown>
+                            </div>
+
+                        </div>
+
+                        <!-- Row 2 -->
+                        <div class="ui-g">
+                            <!-- Used For -->
+                            <div class="ui-lg-3 ui-md-6 ui-sm-12 ui-xs-12 p-2">
+                                <h6>Storage/Usage</h6>
+                                <p-dropdown [style]="{width:'100%', height: 'auto'}" [options]="storeUse" id="storeUse" name="storeUse" editable="true" placeholder="Where will be stored/used?" formControlName="storeUse">
+                                </p-dropdown>
+                            </div>
+                            <!-- Title -->
+                            <div class="ui-lg-3 ui-md-6 ui-sm-12 ui-xs-12 p-2">
+                                <h6>Project Title</h6>
+                                <input type="text" class="form-control form-control-sm" id="projectTitle" name="projectTitle" placeholder="Project Title" formControlName="projectTitle" (change)="checkValid()" pInputText>
+                            </div>
+                            <!-- Description -->
+                            <div class="ui-lg-3 ui-md-6 ui-sm-12 ui-xs-12 p-2">
+                                <h6>Project Description</h6>
+                                <input type="text" class="form-control form-control-sm" id="projectDescription" name="projectDescription" placeholder="Project Description" formControlName="projectDescription" (change)="checkValid()" pInputText>
+                            </div>
+                            <!-- Cost center -->
+                            <div class="ui-lg-3 ui-md-6 ui-sm-12 ui-xs-12 p-2">
+                                <h6>Cost Center</h6>
+                                <input type="text" class="form-control form-control-sm" id="costCenter" name="costCenter" placeholder="Cost Center" formControlName="costCenter" (change)="checkValid()" pInputText>
+                            </div>
+                        </div>
+
+                        <!-- Row 3 -->
+                        <div class="ui-g">
+                            <!-- Status -->
+                            <div class="ui-lg-3 ui-md-6 ui-sm-12 ui-xs-12 p-2">
+                                <h6>Status</h6>
+                                <p-dropdown [style]="{width:'100%', height: 'auto'}" [options]="status" id="status" name="status" editable="true" placeholder="Select a Status" formControlName="status">
+                                </p-dropdown>
+                            </div>
+                            <!-- Order by -->
+                            <div class="ui-lg-3 ui-md-6 ui-sm-12 ui-xs-12 p-2">
+                                <h6>Order by</h6>
+                                <p-dropdown [style]="{width:'100%', height: 'auto'}" [options]="order" id="orderBy" name="orderBy" editable="true" placeholder="Select Order" formControlName="orderBy">
+                                </p-dropdown>
+                            </div>
+                            <!-- Sort by -->
+                            <div class="ui-lg-6 ui-md-6 ui-sm-12 ui-xs-12">
+                                <div class="ui-g">
+                                    <div class="ui-g-12 ui-g-nopad pl-2">
+                                        <h6>Sort by</h6>
+                                    </div>
+                                    <div class="ui-lg-4 ui-md-5 ui-sm-12 ui-xs-12">
+                                        <p-radioButton name="radio" value="0" formControlName="sortByType" label="Ascending">
+                                        </p-radioButton>
+                                    </div>
+                                    <div class="ui-lg-4 ui-md-5 ui-sm-12 ui-xs-12">
+                                        <p-radioButton name="radio" value="1" formControlName="sortByType" label="Descending"></p-radioButton>
+                                    </div>
+                                    <div class="ui-lg-4 ui-md-2"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row 4 -->
+                        <div class="ui-g">
+                            <div class="ui-g-1"></div>
+                            <div class="ui-g-10 pt-2 pb-2">
+                                <div style="text-align: center;">
+                                    <button class="btn btn-primary mr-2" id="searchButton" type="submit" (click)="checkValid()">
+                                        <i class="fa fa-search"></i>&nbsp; Search</button>
+                                    <button class="btn btn-primary ml-2" id="resetButton" type="button" (click)="resetFrom()">
+                                        <i class="fa fa-refresh"></i>&nbsp; Reset</button>
+                                </div>
+                            </div>
+                            <div class="ui-g-1"></div>
+                        </div>
+
+
+                    </form>
+                    <!-- ui-g-12 end -->
+                </div>
+
+                <!-- Result Table -->
+                <div class="ui-g-12 mb-3">
+
+                    <p-table [columns]="headers" [value]="corpHwSwSearchList" [responsive]="true" [paginator]="true" [rows]="rowSize" class="table text-center" sortMode="multiple" [resizableColumns]="true" [alwaysShowPaginator]="false" exportFilename="Corp-HW/SW-Search-List"
+                        #dt [(first)]="first">
+                        <ng-template pTemplate="caption">
+                            <div class="row">
+                                <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+                                    <div class="input-group input-group-sm">
+                                        <div class="input-group-addon"><i class="fa fa-filter"></i></div>
+                                        <input type="text" pInputText placeholder="Filter" id="filter" class="form-control form-control-sm" (input)="dt.filterGlobal($event.target.value, 'contains')" style="width:auto">
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 mt-2" id="totalRecords">
+                                    Records ({{corpHwSwSearchList.length}})
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                                    <p-dropdown [options]="rowOptions" [(ngModel)]="rowSize" name="rowSelecter" editable="true" placeholder="Select Row"></p-dropdown>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 mt-1" style="text-align: right;">
+                                    <button type="button" pButton icon="pi pi-file-excel pull-right" iconPos="left" class="ui-button-success" label="Export" (click)="dt.exportCSV()" [disabled]="corpHwSwSearchList.length === 0"></button>
+                                </div>
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="header" let-columns>
+                            <tr>
+                                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                    {{col.header}}
+                                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-rowData let-columns="columns">
+
+                            <tr [pSelectableRow]="rowData">
+                                <td *ngFor="let col of columns">
+                                    <a routerLink="/new-rfe-document/corpReqNum/view/{{rowData['corpPSReqNum']}}" routerLinkActive="active" *ngIf="isLink(col.field)">{{rowData[col.field]}}</a>
+                                    <p *ngIf="isApprovalAmount(col.field)">
+                                        {{rowData[col.field] | currency:'USD':'symbol':'1.2-2'}}</p>
+                                    <p *ngIf="countCheck(rowData[col.field])" [tooltip]="myTooltip">
+                                        {{substring(rowData[col.field])}}</p>
+                                    <p *ngIf="isDate(col.field)"> {{rowData[col.field] | date :"MM/dd/yyyy, h:mm a"}}</p>
+                                    <p *ngIf="!isLink(col.field) && !isApprovalAmount(col.field) &&
+                                        !countCheck(rowData[col.field])&&!isDate(col.field)">{{rowData[col.field]}}
+                                    </p>
+                                    <ng-template #myTooltip placement="top">
+                                        {{rowData[col.field]}}
+                                    </ng-template>
+                                </td>
+                            </tr>
+
+                        </ng-template>
+                    </p-table>
+                </div>
+
+                <!-- ui-g end -->
+            </div>
+        </p-card>
+    </div>
+</div>
+
+
+
+<!-- Footer -->
+<nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+    ERFE © 3M {{currentYear}}. All Rights Reserved.
+</nav>

@@ -1,0 +1,18 @@
+.shadow {
+    -webkit-box-shadow: 0 8px 6px -6px #999;
+    -moz-box-shadow: 0 8px 6px -6px #999;
+    box-shadow: 0 8px 6px -6px #999;
+    /* the rest of your styling */
+}
+
+
+/* remove the gap so it doesn't close */
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0;
+}
+
+.custom-bold {
+    font-weight: bold;
+}

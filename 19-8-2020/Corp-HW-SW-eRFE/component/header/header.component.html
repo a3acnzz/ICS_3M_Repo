@@ -1,0 +1,53 @@
+<nav class="navbar fixed-top navbar-expand-lg navbar-light shadow" style="background-color: #e3f2fd;">
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavCollapse" aria-controls="navbarNavCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+    <!-- Image and text -->
+    <a class="navbar-brand" [routerLink]="['/dashboard']">
+        <img [src]="headerLogoFilename" width="30" height="30" class="d-inline-block align-top" alt="3M">&#160;
+        <h4 class="d-inline-block align-top m-0">
+            ERFE
+            <h6 class="d-inline-block align-bottom m-0">HW/SW</h6>
+        </h4>
+    </a>
+
+    <div class="collapse navbar-collapse" id="navbarNavCollapse">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link custom-bold btn btn-primary btn-sm text-white mr-1" [routerLink]="['/dashboard']"><i class="fa fa-dashboard"></i>&#160;Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <!-- [ngClass]="{'btn btn-primary text-white m-0' : headerHighlight === 'home'}" -->
+                <a class="nav-link custom-bold btn btn-primary btn-sm text-white mr-1" [routerLink]="['./home-page']"><i class="fa fa-home"></i>&#160;Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link custom-bold btn btn-primary btn-sm text-white mr-1" [routerLink]="['./new-rfe-document']"><i class="fa fa-pencil"></i>&#160;New RFE Document</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link custom-bold btn btn-primary btn-sm text-white mr-1" [routerLink]="['./search']"><i class="fa fa-search"></i>&#160;Search</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link custom-bold dropdown-toggle btn btn-primary btn-sm text-white mr-1" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-unlock-alt item-icon"></i>&#160;Administration
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" [routerLink]="['./all-documents']">
+                        <i class="fa fa-bars item-icon"></i>&#160;&#160;All RFE Documents by Status
+                    </a>
+                    <a class="dropdown-item" [routerLink]="['./job-trigger']">
+                        <i class="fa fa-clock-o item-icon"></i>&#160;&#160;Job Trigger
+                    </a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link custom-bold btn btn-primary btn-sm text-white mr-1" [routerLink]="['./help']"><i class="fa fa-info-circle"></i>&#160;Help</a>
+            </li>
+        </ul>
+        <!-- *ngIf="!!userName"  -->
+        <span class="navbar-text text-primary">
+            lastName
+        </span>
+    </div>
+</nav>
